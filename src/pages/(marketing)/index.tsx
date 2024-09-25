@@ -1,7 +1,10 @@
-"use client"
-
 import { Button } from "@/components/ui/button"
+import { Cover } from "@/components/ui/cover"
+import { FlipWords } from "@/components/ui/flip-words"
+import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight"
 import { Input } from "@/components/ui/input"
+import { RainbowButton } from "@/components/ui/rainbow-button"
+import SparklesText from "@/components/ui/sparkles-text"
 import {
     BrainCircuit,
     FileUp,
@@ -12,7 +15,7 @@ import {
 } from "lucide-react"
 import { Link } from "react-router-dom"
 
-export function LandingPageComponent() {
+export function HomePage() {
     return (
         <div className="flex flex-col min-h-screen">
             <header className="px-4 lg:px-6 h-14 flex items-center justify-center">
@@ -26,19 +29,19 @@ export function LandingPageComponent() {
                             className="text-sm font-medium hover:underline underline-offset-4"
                             to="#features"
                         >
-                            Features
+                            Tính năng
                         </Link>
                         <Link
                             className="text-sm font-medium hover:underline underline-offset-4"
                             to="#pricing"
                         >
-                            Pricing
+                            Các gói
                         </Link>
                         <Link
                             className="text-sm font-medium hover:underline underline-offset-4"
                             to="#contact"
                         >
-                            Contact
+                            Liên hệ
                         </Link>
                     </nav>
                 </div>
@@ -48,19 +51,35 @@ export function LandingPageComponent() {
                     <div className="container px-4 md:px-6 mx-auto">
                         <div className="flex flex-col items-center space-y-4 text-center">
                             <div className="space-y-2">
-                                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                                    Transform Your Ideas into Mind Maps with AI
-                                </h1>
+                                <HeroHighlight>
+                                    <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none mb-8">
+                                        Biến{" "}
+                                        {/* <FlipWords
+                                        words={[
+                                            "Ý Tưởng",
+                                            "Tài Liệu",
+                                            "Trang Web",
+                                        ]}
+                                        className="-mx-1"
+                                    /> */}
+                                        {/* <Highlight>Mọi Thứ</Highlight> */}
+                                        <Cover>Mọi Thứ</Cover> Trở Thành{" "}
+                                        <SparklesText text="Sơ Đồ Tư Duy" />
+                                    </h1>
+                                </HeroHighlight>
                                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                                    MindGPT uses advanced AI to generate
-                                    comprehensive mind maps from your prompts
-                                    and uploaded files. Visualize your thoughts
-                                    effortlessly.
+                                    MindGPT sử dụng trí tuệ nhân tạo AI để tạo
+                                    sơ đồ tư duy từ những ý tưởng, tài liệu mà
+                                    bạn tải lên và hiển thị chúng một cách trực
+                                    quan.
+                                    <br /> Bạn hoàn toàn có thể chỉnh sửa nó
+                                    theo ý thích.
                                 </p>
                             </div>
                             <div className="space-x-4">
-                                <Button>Get Started</Button>
-                                <Button variant="outline">Learn More</Button>
+                                <RainbowButton>
+                                    Bắt đầu sáng tạo ngay
+                                </RainbowButton>
                             </div>
                         </div>
                     </div>
@@ -71,27 +90,27 @@ export function LandingPageComponent() {
                 >
                     <div className="container px-4 md:px-6 mx-auto">
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12">
-                            Features
+                            Tính năng
                         </h2>
                         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                             <div className="flex flex-col items-center text-center">
-                                <Sparkles className="h-12 w-12 text-primary mb-4" />
+                                <Sparkles className="h-12 w-12 text-primary mb-4 capitalize" />
                                 <h3 className="text-xl font-bold mb-2">
-                                    AI-Powered Generation
+                                    Sử dụng sức mạnh của AI tạo sinh
                                 </h3>
                                 <p className="text-gray-500 dark:text-gray-400">
-                                    Create detailed mind maps from simple
-                                    prompts using our advanced AI technology.
+                                    Tạo ra sơ đồ tư duy chỉ từ những ý tưởng đơn
+                                    giản bằng việc sử dụng AI
                                 </p>
                             </div>
                             <div className="flex flex-col items-center text-center">
                                 <FileUp className="h-12 w-12 text-primary mb-4" />
-                                <h3 className="text-xl font-bold mb-2">
-                                    File Upload Support
+                                <h3 className="text-xl font-bold mb-2 capitalize">
+                                    Hỗ trợ upload tài liệu
                                 </h3>
                                 <p className="text-gray-500 dark:text-gray-400">
-                                    Upload documents and let MindGPT extract key
-                                    concepts to build comprehensive mind maps.
+                                    Cấu trúc hóa tài liệu của bạn thành sơ đồ tư
+                                    duy chỉ chưa đầy 1 phút
                                 </p>
                             </div>
                             <div className="flex flex-col items-center text-center">
