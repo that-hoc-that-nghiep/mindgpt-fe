@@ -14,8 +14,8 @@ import MindmapEditorLayout from "./pages/editor/[mindmapId]/layout"
 import MindmapEditorPage from "./pages/editor/[mindmapId]"
 import CallbackPage from "./pages/(auth)/callback"
 import { LoginPage } from "./pages/(auth)/login"
-import ProfileSettingPage from "./pages/profile"
 import NewMindmapPage from "./pages/dashboard/[orgId]/new-mindmap"
+import { ProfileSettingPage } from "./pages/profile"
 
 const queryClient = new QueryClient()
 
