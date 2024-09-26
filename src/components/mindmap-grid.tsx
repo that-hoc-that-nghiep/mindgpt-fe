@@ -20,7 +20,7 @@ interface MindmapCard {
 }
 
 const mindmapData: MindmapCard[] = [
-  { id: '1', title: "test1", subtitle: "test1", type: 'mindmap' },
+  { id: '1', title: "zu'dz", subtitle: "zudz", type: 'mindmap' },
   { id: '2', title: "helo", subtitle: "helo", type: 'central-concept' },
   { id: '3', title: "test2", subtitle: "test2", type: 'central-concept' },
   { id: '4', title: "test1", subtitle: "test1", type: 'central-concept' },
@@ -38,7 +38,7 @@ const getIcon = (type: 'mindmap' | 'central-concept') => {
   }
 }
 
-export default function MindmapPage() {
+export function MindmapGridComponent() {
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
