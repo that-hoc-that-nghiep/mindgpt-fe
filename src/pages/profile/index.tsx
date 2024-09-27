@@ -57,10 +57,10 @@ export function ProfileSettingPage() {
         <Link to="/dashboard">
           <Button variant="ghost" className="absolute top-4 left-4 text-white hover:text-blue-100">
             <ArrowLeftIcon className="h-6 w-6 mr-2" />
-            Back to Dashboard
+            Quay lại Dashboard
           </Button>
         </Link>
-        <h1 className="text-4xl font-bold text-center text-white">Profile</h1>
+        <h1 className="text-4xl font-bold text-center text-white">Trang cá nhân</h1>
       </header>
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
