@@ -1,5 +1,4 @@
-"use client";
-
+import React, { useState } from "react";
 import {
   Bell,
   CircleUser,
@@ -9,6 +8,8 @@ import {
   Settings,
   CreditCard,
   Plus,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -30,14 +31,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 export default function DashboardLayout() {
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+  const location = useLocation();
+  const basePath = location.pathname.replace(
+    /\/(general-settings|members-settings|subscription)$/,
+    ""
+  );
+
+  // State to manage visibility of General and Members links
+  const [showSettingsLinks, setShowSettingsLinks] = useState(false);
+
+  const handleSearch = (event) => {
     event.preventDefault();
     // Implement search functionality here
     console.log("Search submitted");
   };
+
+  const toggleSettingsLinks = () => {
+    setShowSettingsLinks(!showSettingsLinks);
+  };
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
@@ -63,13 +78,36 @@ export default function DashboardLayout() {
               </Link>
               <Link
                 to="#"
+                onClick={toggleSettingsLinks} // Toggle the visibility of settings links
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <Settings className="h-4 w-4" />
                 Settings
+                {/* Conditional rendering of the up/down arrow */}
+                {showSettingsLinks ? (
+                  <ChevronUp className="ml-auto h-4 w-4" />
+                ) : (
+                  <ChevronDown className="ml-auto h-4 w-4" />
+                )}
               </Link>
+              {showSettingsLinks && ( // Conditionally render General and Members links
+                <>
+                  <Link
+                    to={`${basePath}/general-settings`}
+                    className="flex ml-7 items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  >
+                    General
+                  </Link>
+                  <Link
+                    to={`${basePath}/members-settings`}
+                    className="flex ml-7 items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                  >
+                    Members
+                  </Link>
+                </>
+              )}
               <Link
-                to="#"
+                to={`${basePath}/subscription`}
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <CreditCard className="h-4 w-4" />
