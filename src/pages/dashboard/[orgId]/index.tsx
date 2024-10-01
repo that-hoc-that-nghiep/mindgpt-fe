@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pencil, Trash2, Brain, Target, LayoutGrid } from 'lucide-react'
+import { Pencil, Trash2, Brain, Target, LayoutGrid, Plus } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import {
@@ -41,6 +41,13 @@ const getIcon = (type: 'mindmap' | 'central-concept') => {
 export default function MindmapPage() {
   return (
     <div className="container mx-auto p-4">
+      <div className="mb-6 flex justify-between items-center">
+        <h1 className="text-2xl font-bold">My Mindmaps</h1>
+        <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Plus className="h-5 w-5 mr-2" />
+          Create New Mindmap
+        </Button>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {mindmapData.map((card) => (
           <Card key={card.id} className="flex flex-col">
