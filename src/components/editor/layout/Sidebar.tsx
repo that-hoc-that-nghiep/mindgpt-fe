@@ -3,23 +3,22 @@ import {
   MessageCircleMore,
   PenSquare,
   PuzzleIcon,
-  X,
 } from "lucide-react";
 import ChatBot from "../ChatBot";
-import { ReactElement, useState } from "react";
+import { Dispatch, ReactElement, SetStateAction, useState } from "react";
 import { SelectFunc } from "@/constants/editor";
 import Summary from "../Summary";
 import ManualEdit from "../ManualEdit";
 import Quiz from "../Quiz";
-import { Toggle } from "@/components/ui/toggle";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
-
-export default function Sidebar() {
+interface ISidebarProps {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}
+export default function Sidebar({ setIsOpen }: ISidebarProps) {
   const funcComponent: Record<SelectFunc, ReactElement> = {
     [SelectFunc.CHATBOT]: <ChatBot />,
     [SelectFunc.SUMMARY]: <Summary />,
-    [SelectFunc.QUIZ]: <Quiz />,
+    [SelectFunc.QUIZ]: <Quiz setIsOpen={setIsOpen} />,
     [SelectFunc.EDIT]: <ManualEdit />,
   };
   const [isSelect, setIsSelect] = useState<SelectFunc>(SelectFunc.CHATBOT);

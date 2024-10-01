@@ -1,8 +1,17 @@
 import { Copy, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
+import { useState } from "react";
+import { NotificationToast } from "@/common/notificationToast";
 
 export default function Summary() {
+  const [loading, setLoading] = useState(false);
+  const handleGenerateSummary = async () => {
+    setLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setLoading(false);
+    NotificationToast.success("Generate quiz successfully");
+  };
   return (
     <>
       <div className=" flex justify-between items-center">
@@ -12,8 +21,11 @@ export default function Summary() {
         </Button>
       </div>
       <div className="flex">
-        <Button className="bg-blue-500 rounded-none w-[85%]">
-          Generate summary
+        <Button
+          onClick={() => handleGenerateSummary()}
+          className="bg-blue-500 rounded-none w-[85%]"
+        >
+          {loading ? "Loading..." : "Generate summary"}
         </Button>
         <Button
           className="rounded-none bg-sky-100 w-[15%]"

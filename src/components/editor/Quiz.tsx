@@ -1,8 +1,11 @@
 import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-
-export default function Quiz() {
+import { Dispatch, SetStateAction, useState } from "react";
+interface IQuizProps {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}
+export default function Quiz({ setIsOpen }: IQuizProps) {
   return (
     <>
       <div className=" flex justify-between items-center">
@@ -15,7 +18,12 @@ export default function Quiz() {
         className="rounded-sm"
         placeholder="Enter the topic that the Ai uses to generate the quiz"
       />
-      <Button className="rounded-sm bg-blue-500">Play</Button>
+      <Button
+        onClick={() => setIsOpen(true)}
+        className="rounded-sm bg-blue-500"
+      >
+        Play
+      </Button>
     </>
   );
 }

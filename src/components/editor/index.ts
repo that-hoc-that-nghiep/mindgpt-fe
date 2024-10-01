@@ -6,3 +6,4 @@ export * from "./ChatBot";
 export * from "./ManualEdit";
 export * from "./Summary";
 export * from "./Quiz";
+export * from "./PlayQuiz";

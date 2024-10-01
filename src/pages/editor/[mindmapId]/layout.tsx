@@ -2,27 +2,38 @@ import Header from "@/components/editor/layout/Header";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Modal from "@/components/editor/Modal";
-import SaveForm from "@/components/editor/SaveForm";
 import Sidebar from "@/components/editor/layout/Sidebar";
+import SaveForm from "@/components/editor/SaveForm";
+import PlayQuiz from "@/components/editor/PlayQuiz";
+
 const MindmapEditorLayout = () => {
-  const [isSaveOpen, setSaveOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false);
+  const [isQuizOpen, setQuizOpen] = useState(false);
+
   return (
     <>
       <div className="flex h-screen flex-col">
-        <Header setIsOpen={setSaveOpen} />
+        <Header setIsOpen={setOpen} />
         <div className="flex h-full flex-row">
-          <Sidebar />
+          <Sidebar setIsOpen={setQuizOpen} />
           <Outlet />
         </div>
       </div>
-      <Modal
-        isOpen={isSaveOpen}
-        setIsOpen={setSaveOpen}
-        title="Confirm minmap"
-        description="Are you sure you want to save this mindmap?"
-      >
-        <SaveForm setIsOpen={setSaveOpen} minmapId={1}></SaveForm>
-      </Modal>
+      {isOpen && (
+        <Modal
+          isOpen={isOpen}
+          setIsOpen={setOpen}
+          title="Confirm minmap"
+          description="Are you sure you want to save this mindmap?"
+        >
+          <SaveForm setIsOpen={setOpen} minmapId={1}></SaveForm>
+        </Modal>
+      )}
+      {isQuizOpen && (
+        <Modal isOpen={isQuizOpen} setIsOpen={setQuizOpen} title="Play Quiz">
+          <PlayQuiz />
+        </Modal>
+      )}
     </>
   );
 };
