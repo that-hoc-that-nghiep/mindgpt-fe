@@ -18,6 +18,7 @@ import { LoginPage } from "./pages/(auth)/login";
 import ProfileSettingPage from "./pages/profile";
 import NewMindmapPage from "./pages/dashboard/[orgId]/new-mindmap";
 
+
 const queryClient = new QueryClient();
 
 const routers = createBrowserRouter([
