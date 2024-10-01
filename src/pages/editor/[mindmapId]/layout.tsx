@@ -7,8 +7,8 @@ const MindmapEditorLayout = () => {
   const [isSaveOpen, setSaveOpen] = useState(false);
   return (
     <>
-      <Header setIsOpen={setSaveOpen} />
       <div className="flex h-screen flex-col">
+        <Header setIsOpen={setSaveOpen} />
         <Outlet />
       </div>
       <Modal

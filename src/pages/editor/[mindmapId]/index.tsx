@@ -1,5 +1,7 @@
+import Mindmap from "@/components/editor/Mindmap";
+
 const MindmapEditorPage = () => {
-  return <>Main mindmap editor page</>;
+  return <Mindmap />;
 };
 
 export default MindmapEditorPage;
