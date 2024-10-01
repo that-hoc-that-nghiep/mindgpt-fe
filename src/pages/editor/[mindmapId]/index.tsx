@@ -1,5 +1,5 @@
 const MindmapEditorPage = () => {
-    return <div>MindmapEditorPage</div>
-}
+  return <>Main mindmap editor page</>;
+};
 
-export default MindmapEditorPage
+export default MindmapEditorPage;
