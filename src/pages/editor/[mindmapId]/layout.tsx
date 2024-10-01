@@ -3,13 +3,17 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Modal from "@/components/editor/Modal";
 import SaveForm from "@/components/editor/SaveForm";
+import Sidebar from "@/components/editor/layout/Sidebar";
 const MindmapEditorLayout = () => {
   const [isSaveOpen, setSaveOpen] = useState(false);
   return (
     <>
       <div className="flex h-screen flex-col">
         <Header setIsOpen={setSaveOpen} />
-        <Outlet />
+        <div className="flex h-full flex-row">
+          <Sidebar />
+          <Outlet />
+        </div>
       </div>
       <Modal
         isOpen={isSaveOpen}

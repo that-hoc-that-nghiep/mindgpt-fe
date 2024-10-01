@@ -2,3 +2,7 @@ export * from "./layout";
 export * from "./Modal";
 export * from "./SaveForm";
 export * from "./Mindmap";
+export * from "./ChatBot";
+export * from "./ManualEdit";
+export * from "./Summary";
+export * from "./Quiz";
