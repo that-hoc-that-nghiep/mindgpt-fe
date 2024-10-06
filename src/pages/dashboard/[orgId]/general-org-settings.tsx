@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 const GeneralOrgSettingPage = () => {
-  const [orgName, setOrgName] = useState("Acme Inc");
+  const [orgName, setOrgName] = useState("Cao Hiep K17HL's Org");
 
   const handleDeleteOrg = () => {
     console.log("Organization deleted");
