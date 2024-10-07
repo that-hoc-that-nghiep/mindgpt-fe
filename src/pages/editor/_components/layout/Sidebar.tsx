@@ -11,6 +11,7 @@ import Summary from "../Summary";
 import ManualEdit from "../ManualEdit";
 import Quiz from "../Quiz";
 import { Button } from "@/components/ui/button";
+import { useToasterStore } from "react-hot-toast";
 interface ISidebarProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -23,7 +24,8 @@ export default function Sidebar({ setIsOpen }: ISidebarProps) {
   };
   const [isSelect, setIsSelect] = useState<SelectFunc>(SelectFunc.CHATBOT);
   const [open, setOpen] = useState(true);
-
+  const { toasts } = useToasterStore();
+  const loading = toasts.some((t) => t.type === "loading");
   const handleSelect = (selectFunc: SelectFunc) => {
     if (isSelect === selectFunc) {
       setOpen(!open);
@@ -38,6 +40,7 @@ export default function Sidebar({ setIsOpen }: ISidebarProps) {
         <Button
           variant="ghost"
           size="icon"
+          disabled={loading}
           onClick={() => handleSelect(SelectFunc.CHATBOT)}
         >
           <MessageCircleMore className="text-blue-500" />
@@ -45,6 +48,7 @@ export default function Sidebar({ setIsOpen }: ISidebarProps) {
         <Button
           variant="ghost"
           size="icon"
+          disabled={loading}
           onClick={() => handleSelect(SelectFunc.SUMMARY)}
         >
           <ClipboardList className="text-blue-500" />
@@ -52,6 +56,7 @@ export default function Sidebar({ setIsOpen }: ISidebarProps) {
         <Button
           variant="ghost"
           size="icon"
+          disabled={loading}
           onClick={() => handleSelect(SelectFunc.QUIZ)}
         >
           <PuzzleIcon className="text-blue-500" />
@@ -59,6 +64,7 @@ export default function Sidebar({ setIsOpen }: ISidebarProps) {
         <Button
           variant="ghost"
           size="icon"
+          disabled={loading}
           onClick={() => handleSelect(SelectFunc.EDIT)}
         >
           <PenSquare className="text-blue-500" />

@@ -1,16 +1,16 @@
 import { Copy, X } from "lucide-react";
-import { useState } from "react";
-import { NotificationToast } from "@/common/notificationToast";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import toast, { useToasterStore } from "react-hot-toast";
 
 export default function Summary() {
   const { toasts } = useToasterStore();
-  const wait = () => new Promise((resolve) => setTimeout(resolve, 2000));
+
+  const wait = (time: number) =>
+    new Promise((resolve) => setTimeout(resolve, time));
   const loading = toasts.some((t) => t.type === "loading");
   const handleGenerateSummary = async () => {
-    toast.promise(wait(), {
+    toast.promise(wait(2000), {
       loading: "Generating summary...",
       success: "Summary generated successfully",
       error: "Error generating summary",
@@ -44,7 +44,7 @@ export default function Summary() {
       <p className="text-xs text-gray-500">
         Any information generated from AI may not be absolutely accurate.
       </p>
-      <ScrollArea className="h-[32rem] p-2 border">
+      <ScrollArea className="h-[33rem] p-2 border">
         <div className="space-y-4 text-sm">
           <p>
             Chiến dịch Điện Biên Phủ là một trong những trận đánh quan trọng
