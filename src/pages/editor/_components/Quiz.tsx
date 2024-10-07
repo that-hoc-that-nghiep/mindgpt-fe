@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import toast, { useToasterStore } from "react-hot-toast";
 interface IQuizProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -9,9 +9,6 @@ interface IQuizProps {
 export default function Quiz({ setIsOpen }: IQuizProps) {
   const wait = () => new Promise((resolve) => setTimeout(resolve, 2000));
   const { toasts } = useToasterStore();
-  // const { loading, setLoading } = useEditorStore((state) => state);
-  // setLoading(toasts.some((t) => t.type === "loading"));
-  // setLoading(toasts.some((t) => t.type === "loading"));
   const loading = toasts.some((t) => t.type === "loading");
   const handleOpenQuiz = async () => {
     toast
