@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -28,18 +26,18 @@ export function AdminLayout() {
       >
         <div className="flex items-center justify-center h-16 ">
           <BrainCircuit className="size-6 text-primary" />
-          <h1 className="text-lg ml-2 font-semibold">Admin Dashboard</h1>
+          <h1 className="text-lg ml-2 font-semibold">Trang chủ Admin</h1>
         </div>
         <nav className="mt-8">
           <NavItem
             href="/admin/users"
             icon={<Users className="h-5 w-5" />}
-            text="Users"
+            text="Người dùng"
           />
           <NavItem
             href="/admin/orgs"
             icon={<Building2 className="h-5 w-5" />}
-            text="Organizations"
+            text="Tổ chức"
           />
           <NavItem
             href="/admin/mindmaps"
@@ -66,7 +64,7 @@ export function AdminLayout() {
           </div>
           <Link to={"/login"}>
             <Button variant="ghost" className="flex items-center">
-              <LogOut className="mr-2 h-4 w-4" /> Log out
+              <LogOut className="mr-2 h-4 w-4" /> Đăng xuất
             </Button>
           </Link>
         </header>
