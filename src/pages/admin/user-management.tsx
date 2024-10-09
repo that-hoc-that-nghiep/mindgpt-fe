@@ -156,14 +156,14 @@ export default function UserManagement() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
+      <h1 className="text-3xl font-bold tracking-tight">Quản lí người dùng</h1>
 
       <div className="flex items-center space-x-4 mb-4">
         <div className="flex items-center space-x-2 flex-1">
           <Search className="h-5 w-5 text-gray-500" />
           <Input
             type="text"
-            placeholder="Search users by name..."
+            placeholder="Tìm kiếm người dùng theo tên..."
             onChange={(e) => setSearchTerm(e.target.value)}
             className="max-w-sm"
           />
@@ -173,7 +173,7 @@ export default function UserManagement() {
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Users</SelectItem>
+            <SelectItem value="all">Toàn bộ</SelectItem>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="banned">Banned</SelectItem>
           </SelectContent>
@@ -185,10 +185,10 @@ export default function UserManagement() {
           <TableHeader>
             <TableRow>
               <TableHead>Email</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Membership</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Tên</TableHead>
+              <TableHead>Hội viên</TableHead>
+              <TableHead>Trạng thái</TableHead>
+              <TableHead>Hành động</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -228,7 +228,7 @@ export default function UserManagement() {
                     ) : (
                       <>
                         <UserCog className="mr-2 h-4 w-4" />
-                        Activate
+                        Mở
                       </>
                     )}
                   </Button>
@@ -245,10 +245,10 @@ export default function UserManagement() {
           disabled={currentPage === 1}
           variant="outline"
         >
-          <ChevronLeft className="h-4 w-4 mr-2" /> Previous
+          <ChevronLeft className="h-4 w-4 mr-2" /> Trước
         </Button>
         <span>
-          Page {currentPage} of {Math.ceil(filteredUsers.length / usersPerPage)}
+          Trang {currentPage} của {Math.ceil(filteredUsers.length / usersPerPage)}
         </span>
         <Button
           onClick={() =>
@@ -259,7 +259,7 @@ export default function UserManagement() {
           disabled={indexOfLastUser >= filteredUsers.length}
           variant="outline"
         >
-          Next <ChevronRight className="h-4 w-4 ml-2" />
+          Sau <ChevronRight className="h-4 w-4 ml-2" />
         </Button>
       </div>
     </div>

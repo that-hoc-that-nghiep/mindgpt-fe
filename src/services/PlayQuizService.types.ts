@@ -1,5 +1,8 @@
+import { TypeSelectAnswer } from "@/constants/editor";
+import { IKeyValueObject } from "./types";
+
 export interface ISentenceQuiz {
-  id: number;
   question: string;
-  answers: string[];
+  answers: IKeyValueObject<TypeSelectAnswer, string>[];
+  correctAnswer: TypeSelectAnswer;
 }

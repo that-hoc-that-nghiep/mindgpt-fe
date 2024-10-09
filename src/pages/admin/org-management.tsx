@@ -49,14 +49,14 @@ export function OrgManagement() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">Organization Management</h1>
+      <h1 className="text-3xl font-bold tracking-tight">Quản lí tổ chức</h1>
 
       <div className="flex items-center space-x-4 mb-4">
         <div className="flex items-center space-x-2 flex-1">
           <Search className="h-5 w-5 text-gray-500" />
           <Input
             type="text"
-            placeholder="Search organizations by name..."
+            placeholder="Tìm kiếm tổ chức theo tên..."
             onChange={(e) => setSearchTerm(e.target.value)}
             className="max-w-sm"
           />
@@ -66,7 +66,7 @@ export function OrgManagement() {
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Organizations</SelectItem>
+            <SelectItem value="all">Toàn bộ</SelectItem>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="banned">Banned</SelectItem>
           </SelectContent>
@@ -77,11 +77,11 @@ export function OrgManagement() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Members</TableHead>
+              <TableHead>Tên</TableHead>
+              <TableHead>Thành viên</TableHead>
               <TableHead>Mind Maps</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Trạng thái</TableHead>
+              <TableHead>Hành động</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -113,15 +113,15 @@ export function OrgManagement() {
           disabled={currentPage === 1}
           variant="outline"
         >
-          <ChevronLeft className="h-4 w-4 mr-2" /> Previous
+          <ChevronLeft className="h-4 w-4 mr-2" /> Trước
         </Button>
-        <span>Page {currentPage} of {Math.ceil(filteredOrgs.length / orgsPerPage)}</span>
+        <span>Trang {currentPage} của {Math.ceil(filteredOrgs.length / orgsPerPage)}</span>
         <Button
           onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredOrgs.length / orgsPerPage)))}
           disabled={indexOfLastOrg >= filteredOrgs.length}
           variant="outline"
         >
-          Next <ChevronRight className="h-4 w-4 ml-2" />
+          Sau <ChevronRight className="h-4 w-4 ml-2" />
         </Button>
       </div>
     </div>
