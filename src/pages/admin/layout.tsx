@@ -92,12 +92,12 @@ function NavItem({
   text: string;
 }) {
   return (
-    <a
-      href={href}
+    <Link
+      to={href}
       className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-200"
     >
       {icon}
       <span className="mx-3">{text}</span>
-    </a>
+    </Link>
   );
 }
