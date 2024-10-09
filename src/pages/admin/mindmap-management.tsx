@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
@@ -58,12 +56,12 @@ export function MindmapManagement() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">Mindmap Management</h1>
+      <h1 className="text-3xl font-bold tracking-tight">Quản lí Mindmap</h1>
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-blue-700">Total Mindmaps</CardTitle>
+            <CardTitle className="text-sm font-medium text-blue-700">Tổng số Mindmaps</CardTitle>
             <MapIcon className="h-4 w-4 text-muted-foreground text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -72,7 +70,7 @@ export function MindmapManagement() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-green-700">Total Users</CardTitle>
+            <CardTitle className="text-sm font-medium text-green-700">Tổng số Người dùng</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -81,7 +79,7 @@ export function MindmapManagement() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-purple-700">Total Organizations</CardTitle>
+            <CardTitle className="text-sm font-medium text-purple-700">Tổng số Tổ chức</CardTitle>
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -95,7 +93,7 @@ export function MindmapManagement() {
           <Search className="h-5 w-5 text-gray-500" />
           <Input
             type="text"
-            placeholder="Search mindmaps by name..."
+            placeholder="Tìm kiếm mindmap theo tên..."
             onChange={(e) => setSearchTerm(e.target.value)}
             className="max-w-sm"
           />
@@ -105,7 +103,7 @@ export function MindmapManagement() {
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Mindmaps</SelectItem>
+            <SelectItem value="all">Toàn bộ</SelectItem>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="banned">Banned</SelectItem>
           </SelectContent>
@@ -116,11 +114,11 @@ export function MindmapManagement() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Author</TableHead>
-              <TableHead>Created Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Tên</TableHead>
+              <TableHead>Tác giả</TableHead>
+              <TableHead>Ngày tạo</TableHead>
+              <TableHead>Trạng thái</TableHead>
+              <TableHead>Hành động</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -152,15 +150,15 @@ export function MindmapManagement() {
           disabled={currentPage === 1}
           variant="outline"
         >
-          <ChevronLeft className="h-4 w-4 mr-2" /> Previous
+          <ChevronLeft className="h-4 w-4 mr-2" /> Trước
         </Button>
-        <span>Page {currentPage} of {Math.ceil(filteredMindmaps.length / mindmapsPerPage)}</span>
+        <span>Trang {currentPage} của {Math.ceil(filteredMindmaps.length / mindmapsPerPage)}</span>
         <Button
           onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredMindmaps.length / mindmapsPerPage)))}
           disabled={indexOfLastMindmap >= filteredMindmaps.length}
           variant="outline"
         >
-          Next <ChevronRight className="h-4 w-4 ml-2" />
+          Sau <ChevronRight className="h-4 w-4 ml-2" />
         </Button>
       </div>
     </div>
