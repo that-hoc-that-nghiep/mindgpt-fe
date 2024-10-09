@@ -1,13 +1,21 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Link, Outlet } from 'react-router-dom'
-import { Button } from "@/components/ui/button"
-import { Menu, LogOut, Home, Users, Building2 } from 'lucide-react'
-import { cn } from "@/lib/utils"
+import { useState } from "react";
+import { Link, Outlet } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  Menu,
+  LogOut,
+  Home,
+  Users,
+  Building2,
+  MapIcon,
+  BrainCircuit,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export function AdminLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -18,12 +26,26 @@ export function AdminLayout() {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex items-center justify-center h-16 bg-gray-900">
-          <h1 className="text-white text-2xl font-semibold">Admin Dashboard</h1>
+        <div className="flex items-center justify-center h-16 ">
+          <BrainCircuit className="size-6 text-primary" />
+          <h1 className="text-lg ml-2 font-semibold">Admin Dashboard</h1>
         </div>
         <nav className="mt-8">
-          <NavItem href="/admin/users" icon={<Users className="h-5 w-5" />} text="Users" />
-          <NavItem href="/admin/orgs" icon={<Building2 className="h-5 w-5" />} text="Organizations" />
+          <NavItem
+            href="/admin/users"
+            icon={<Users className="h-5 w-5" />}
+            text="Users"
+          />
+          <NavItem
+            href="/admin/orgs"
+            icon={<Building2 className="h-5 w-5" />}
+            text="Organizations"
+          />
+          <NavItem
+            href="/admin/mindmaps"
+            icon={<MapIcon className="h-5 w-5" />}
+            text="Mindmaps"
+          />
         </nav>
       </aside>
 
@@ -57,10 +79,18 @@ export function AdminLayout() {
         </main>
       </div>
     </div>
-  )
+  );
 }
 
-function NavItem({ href, icon, text }: { href: string; icon: React.ReactNode; text: string }) {
+function NavItem({
+  href,
+  icon,
+  text,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  text: string;
+}) {
   return (
     <a
       href={href}
@@ -69,5 +99,5 @@ function NavItem({ href, icon, text }: { href: string; icon: React.ReactNode; te
       {icon}
       <span className="mx-3">{text}</span>
     </a>
-  )
+  );
 }
