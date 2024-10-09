@@ -1,7 +1,6 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   ReactFlow,
-  MiniMap,
   Controls,
   Background,
   useNodesState,
@@ -9,6 +8,7 @@ import {
   addEdge,
   Handle,
   Position,
+  NodeToolbar,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { NotebookPen, Pencil, Trash2 } from "lucide-react";
@@ -51,19 +51,23 @@ export default function Mindmap({
     { id: "e1-4", source: "1", target: "4", animated: true },
   ];
   const CustomNode = ({ data }) => {
+    const [isOpen, setIsOpen] = useState(false);
     return (
       <div className="relative flex items-center p-3 bg-white border border-gray-300 rounded-lg shadow-md text-gray-800">
         <div className="flex-1">{data.label}</div>
 
-        <div className="absolute flex flex-col space-y-1 right-[-15px] top-1/2 transform -translate-y-1/2">
+        <NodeToolbar
+          isVisible
+          className="flex flex-col space-y-2"
+          position={Position.Right}
+        >
           <NotebookPen
-            className="cursor-pointer size-3 text-green-500"
+            className="cursor-pointer size-5 text-green-500"
             onClick={() => isSetOpen(true)}
           />
-          <Pencil className="cursor-pointer size-3 text-blue-500" />
-          <Trash2 className="cursor-pointer size-3 text-red-500" />
-        </div>
-
+          <Pencil className="cursor-pointer size-5 text-blue-500" />
+          <Trash2 className="cursor-pointer size-5 text-red-500" />
+        </NodeToolbar>
         <Handle
           type="source"
           position={Position.Bottom}
