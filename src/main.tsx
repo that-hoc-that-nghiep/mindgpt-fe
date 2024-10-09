@@ -17,6 +17,11 @@ import CallbackPage from "./pages/(auth)/callback"
 import { LoginPage } from "./pages/(auth)/login"
 import NewMindmapPage from "./pages/dashboard/[orgId]/new-mindmap"
 import { ProfileSettingPage } from "./pages/profile"
+import UserManagement from "./pages/admin/user-management"
+import { AdminLayout } from "./pages/admin/layout"
+import { OrgManagement } from "./pages/admin/org-management"
+import { MindmapManagement } from "./pages/admin/mindmap-management"
+
 
 const queryClient = new QueryClient()
 
@@ -90,6 +95,24 @@ const routers = createBrowserRouter([
                 path: "/profile",
                 element: <ProfileSettingPage />,
             },
+            {
+                path: "admin",
+                element: <AdminLayout/>,
+                children: [
+                    {
+                        path: "users",
+                        element: <UserManagement/>
+                    },
+                    {
+                        path: "orgs",
+                        element: <OrgManagement/>
+                    },
+                    {
+                        path: "mindmaps",
+                        element: <MindmapManagement/>
+                    }
+                ]
+            }
         ],
     },
 ])
