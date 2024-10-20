@@ -41,41 +41,23 @@ const getIcon = (type: "mindmap" | "central-concept") => {
 
 export default function MindmapPage() {
     return (
-        <div className="container mx-auto p-4">
-            <div className="mb-6 flex justify-between items-center">
-                <h1 className="text-2xl font-bold">My Mindmaps</h1>
-                <Button
-                    className="bg-primary text-primary-foreground hover:bg-primary/90"
-                    asChild
-                >
-                    <Link to={"/dashboard/abc/new"}>
-                        <Plus className="h-5 w-5 mr-2" />
-                        Create New Mindmap
-                    </Link>
-                </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <>
+            <h1 className="section-title">Sơ đồ tư duy</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 min-h-[656px] gap-4">
                 {mindmapData.map((card) => (
-                    <Card key={card.id} className="flex flex-col">
-                        <CardHeader className="bg-gray-200 h-40 flex items-center justify-center">
+                    <Card key={card.id} className="flex flex-col h-80">
+                        <CardHeader className="bg-gray-200 aspect-video flex items-center justify-center">
                             <h2 className="text-4xl font-bold text-gray-400">
                                 {card.title}
                             </h2>
                         </CardHeader>
-                        <CardContent className="flex-grow">
-                            <div className="flex items-center gap-2 mt-2">
-                                {getIcon(card.type)}
-                                <span className="font-semibold">
-                                    {card.type === "mindmap"
-                                        ? "Mindmap"
-                                        : "Central Concept"}
-                                </span>
-                            </div>
+                        <CardContent className="flex-grow flex-col py-3 px-4">
+                            <h3 className="text-xl font-bold">{card.title}</h3>
                             <p className="text-gray-600 mt-1">
                                 {card.subtitle}
                             </p>
                         </CardContent>
-                        <CardFooter className="flex justify-between items-center">
+                        <CardFooter className="flex justify-between items-center px-4">
                             <Button
                                 className="flex-grow mr-2"
                                 variant="default"
@@ -83,7 +65,7 @@ export default function MindmapPage() {
                             >
                                 <Link to={"/editor/abc"}>
                                     <Pencil className="h-4 w-4 mr-2" />
-                                    Edit
+                                    Chỉnh sửa
                                 </Link>
                             </Button>
                             <Button variant="outline" size="icon">
@@ -119,6 +101,6 @@ export default function MindmapPage() {
                     </PaginationContent>
                 </Pagination>
             </div>
-        </div>
+        </>
     )
 }

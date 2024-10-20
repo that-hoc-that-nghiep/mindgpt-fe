@@ -8,8 +8,7 @@ import { HomePage } from "./pages/(marketing)"
 import { NotFoundPage } from "./pages/404"
 import DashboardLayout from "./pages/dashboard/[orgId]/layout"
 import MindmapPage from "./pages/dashboard/[orgId]"
-import GeneralOrgSettingPage from "./pages/dashboard/[orgId]/general-org-settings"
-import MembersOrgSettingPage from "./pages/dashboard/[orgId]/members-org-settings"
+import OrgSettingPage from "./pages/dashboard/[orgId]/org-settings"
 import SubscriptionPage from "./pages/dashboard/[orgId]/subscription"
 import MindmapEditorLayout from "./pages/editor/[mindmapId]/layout"
 import MindmapEditorPage from "./pages/editor/[mindmapId]"
@@ -21,7 +20,6 @@ import UserManagement from "./pages/admin/user-management"
 import { AdminLayout } from "./pages/admin/layout"
 import { OrgManagement } from "./pages/admin/org-management"
 import { MindmapManagement } from "./pages/admin/mindmap-management"
-
 
 const queryClient = new QueryClient()
 
@@ -60,12 +58,8 @@ const routers = createBrowserRouter([
                                 element: <NewMindmapPage />,
                             },
                             {
-                                path: "general-settings",
-                                element: <GeneralOrgSettingPage />,
-                            },
-                            {
-                                path: "members-settings",
-                                element: <MembersOrgSettingPage />,
+                                path: "settings",
+                                element: <OrgSettingPage />,
                             },
                             {
                                 path: "subscription",
@@ -97,22 +91,22 @@ const routers = createBrowserRouter([
             },
             {
                 path: "admin",
-                element: <AdminLayout/>,
+                element: <AdminLayout />,
                 children: [
                     {
                         path: "users",
-                        element: <UserManagement/>
+                        element: <UserManagement />,
                     },
                     {
                         path: "orgs",
-                        element: <OrgManagement/>
+                        element: <OrgManagement />,
                     },
                     {
                         path: "mindmaps",
-                        element: <MindmapManagement/>
-                    }
-                ]
-            }
+                        element: <MindmapManagement />,
+                    },
+                ],
+            },
         ],
     },
 ])
