@@ -28,7 +28,7 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function Header() {
     const [currentOrg, setCurrentOrg] = useState("Cao Hiep K17HL's Org")
@@ -40,14 +40,7 @@ export default function Header() {
     const [isNewOrgModalOpen, setIsNewOrgModalOpen] = useState(false)
     const [newOrgName, setNewOrgName] = useState("")
 
-    const handleCreateNewOrg = () => {
-        if (newOrgName.trim()) {
-            setOrganizations([...organizations, newOrgName.trim()])
-            setCurrentOrg(newOrgName.trim())
-            setNewOrgName("")
-            setIsNewOrgModalOpen(false)
-        }
-    }
+    const navigate = useNavigate()
 
     return (
         <header className="flex h-14 items-center justify-between gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -77,7 +70,7 @@ export default function Header() {
                                 </DropdownMenuItem>
                             ))}
                             <DropdownMenuItem
-                                onSelect={() => setIsNewOrgModalOpen(true)}
+                                onSelect={() => navigate("/create-org")}
                             >
                                 <Plus className="mr-2 h-4 w-4" />
                                 Create new organization
@@ -130,38 +123,6 @@ export default function Header() {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-
-            <Dialog
-                open={isNewOrgModalOpen}
-                onOpenChange={setIsNewOrgModalOpen}
-            >
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Create New Organization</DialogTitle>
-                        <DialogDescription>
-                            Enter a name for your new organization.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Name
-                            </Label>
-                            <Input
-                                id="name"
-                                value={newOrgName}
-                                onChange={(e) => setNewOrgName(e.target.value)}
-                                className="col-span-3"
-                            />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <Button type="submit" onClick={handleCreateNewOrg}>
-                            Create
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </header>
     )
 }

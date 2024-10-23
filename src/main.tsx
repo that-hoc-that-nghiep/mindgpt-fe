@@ -20,6 +20,7 @@ import UserManagement from "./pages/admin/user-management"
 import { AdminLayout } from "./pages/admin/layout"
 import { OrgManagement } from "./pages/admin/org-management"
 import { MindmapManagement } from "./pages/admin/mindmap-management"
+import CreateOrgPage from "./pages/(auth)/create-org"
 
 const queryClient = new QueryClient()
 
@@ -36,6 +37,10 @@ const routers = createBrowserRouter([
             {
                 path: "login",
                 element: <LoginPage />,
+            },
+            {
+                path: "create-org",
+                element: <CreateOrgPage />,
             },
             {
                 path: "auth/callback",
