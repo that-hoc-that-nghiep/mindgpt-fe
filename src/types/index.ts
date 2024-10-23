@@ -66,3 +66,29 @@ export interface OrgResponse {
     subscription: "free" | "plus" | "pro"
     users: UserOrganizationResponse[]
 }
+
+export interface NodeResponse {}
+
+export interface EdgeResponse {}
+
+export interface MindmapMessage {
+    role: "user" | "ai"
+    content: string
+}
+
+export interface MindmapResponse {
+    _id: string
+    title: string
+    thumbnail: string
+    prompt: string
+    document: {
+        type: "pdf" | "web" | "youtube"
+        url: string
+    }
+    documentsId: string[]
+    type: "creative" | "summary"
+    nodes: NodeResponse[]
+    edges: EdgeResponse[]
+    orgId: string
+    conversation: MindmapMessage[]
+}

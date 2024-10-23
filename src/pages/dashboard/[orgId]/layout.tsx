@@ -21,7 +21,7 @@ export default function DashboardLayout() {
                     <Header />
                 </div>
                 <main className="flex-1 overflow-auto bg-background">
-                    <div className="mx-auto py-6 px-10">
+                    <div className="mx-auto py-6 px-10 h-full">
                         <Outlet />
                     </div>
                 </main>
