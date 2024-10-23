@@ -1,14 +1,15 @@
-import React, { useState } from "react"
-import { Outlet, useLocation } from "react-router-dom"
+import { Outlet, useParams } from "react-router-dom"
 import Header from "../_compoments/header"
 import Sidebar from "../_compoments/sidebar"
+import { useEffect } from "react"
+import { useCurrentOrg } from "@/stores/org-store"
 
 export default function DashboardLayout() {
-    const [showSettingsLinks, setShowSettingsLinks] = useState(false)
-
-    const toggleSettingsLinks = () => {
-        setShowSettingsLinks(!showSettingsLinks)
-    }
+    const { orgId } = useParams()
+    const { setCurrentOrg } = useCurrentOrg()
+    useEffect(() => {
+        setCurrentOrg(orgId)
+    }, [orgId])
 
     return (
         <div className="fixed inset-0 flex">

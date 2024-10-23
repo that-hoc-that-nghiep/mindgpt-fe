@@ -17,10 +17,12 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { ArrowLeft, Bell, Camera, Lock, Mail, User } from "lucide-react"
-import { DashboardIcon } from "@radix-ui/react-icons"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
+import { useCurrentOrg } from "@/stores/org-store"
 
 export function ProfileSettingPage() {
+    const { currentOrg } = useCurrentOrg()
+
     const [name, setName] = useState("John Doe")
     const [email, setEmail] = useState("john@example.com")
     const [bio, setBio] = useState(
@@ -52,7 +54,7 @@ export function ProfileSettingPage() {
     return (
         <div className="container mx-auto py-10 px-4 sm:px-6 lg:px-8 max-w-6xl">
             <Button className="mb-4" asChild variant="outline">
-                <Link to={"/dashboard/abc"}>
+                <Link to={`/dashboard/${currentOrg}`}>
                     <ArrowLeft className="size-4 mr-2" />
                     Dashboard
                 </Link>
