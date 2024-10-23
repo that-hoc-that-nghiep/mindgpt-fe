@@ -11,6 +11,7 @@ interface Sparkle {
     delay: number
     scale: number
     lifespan: number
+    className?: string
 }
 
 interface SparklesTextProps {
@@ -32,11 +33,11 @@ interface SparklesTextProps {
 
     /**
      * @required
-     * @type string
+     * @type React.ReactNode
      * @description
      * The text to be displayed
      * */
-    text: string
+    children: React.ReactNode
 
     /**
      * @default 10
@@ -56,13 +57,22 @@ interface SparklesTextProps {
         first: string
         second: string
     }
+
+    /**
+     * @default false
+     * @type boolean
+     * @description
+     * Enable or disable the sparkles
+     * */
+    disabled?: boolean
 }
 
 const SparklesText: React.FC<SparklesTextProps> = ({
-    text,
+    children,
     colors = { first: "#9E7AFF", second: "#FE8BBB" },
     className,
     sparklesCount = 10,
+    disabled = false,
     ...props
 }) => {
     const [sparkles, setSparkles] = useState<Sparkle[]>([])
@@ -107,7 +117,7 @@ const SparklesText: React.FC<SparklesTextProps> = ({
 
     return (
         <span
-            className={cn("text-6xl ", className)}
+            className={cn(className)}
             {...props}
             style={
                 {
@@ -116,23 +126,30 @@ const SparklesText: React.FC<SparklesTextProps> = ({
                 } as CSSProperties
             }
         >
-            <span className="relative inline-block">
-                {sparkles.map((sparkle) => (
-                    <Sparkle key={sparkle.id} {...sparkle} />
-                ))}
-                <strong className="font-bold bg-clip-text text-transparent bg-gradient-to-br from-purple-500 to-pink-500">
-                    {text}
-                </strong>
+            <span className="relative inline-block w-full">
+                {disabled ||
+                    sparkles.map((sparkle) => (
+                        <Sparkle key={sparkle.id} {...sparkle} />
+                    ))}
+                {children}
             </span>
         </span>
     )
 }
 
-const Sparkle: React.FC<Sparkle> = ({ id, x, y, color, delay, scale }) => {
+const Sparkle: React.FC<Sparkle> = ({
+    id,
+    x,
+    y,
+    color,
+    delay,
+    scale,
+    className = "",
+}) => {
     return (
         <motion.svg
             key={id}
-            className="pointer-events-none absolute z-20"
+            className={cn("pointer-events-none absolute z-20", className)}
             initial={{ opacity: 0, left: x, top: y }}
             animate={{
                 opacity: [0, 1, 0],

@@ -21,6 +21,7 @@ import { AdminLayout } from "./pages/admin/layout"
 import { OrgManagement } from "./pages/admin/org-management"
 import { MindmapManagement } from "./pages/admin/mindmap-management"
 import CreateOrgPage from "./pages/(auth)/create-org"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 const queryClient = new QueryClient()
 
@@ -119,8 +120,10 @@ const routers = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <QueryClientProvider client={queryClient}>
-            <RouterProvider router={routers} />
-            <Toaster />
+            <TooltipProvider>
+                <RouterProvider router={routers} />
+                <Toaster />
+            </TooltipProvider>
         </QueryClientProvider>
     </StrictMode>
 )
