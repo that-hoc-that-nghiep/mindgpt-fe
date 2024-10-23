@@ -6,11 +6,10 @@ import { useParams } from "react-router-dom"
 
 const Step1 = () => {
     const { orgId } = useParams()
-    const { formData, nextStep } = useCreateMindmap()
+    const { formData, nextStep, reset } = useCreateMindmap()
 
     useEffect(() => {
         formData.delete("type")
-        formData.set("orgId", orgId)
         formData.set("documentsId", "[]")
         formData.set("depth", "5")
         formData.set("child", "4")

@@ -15,7 +15,7 @@ import {
 } from "lucide-react"
 import { forwardRef, useEffect, useRef } from "react"
 import toast from "react-hot-toast"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 const Circle = forwardRef<
     HTMLDivElement,
@@ -35,7 +35,8 @@ const Circle = forwardRef<
 })
 
 const Step3 = () => {
-    const { formData, setStep } = useCreateMindmap()
+    const { formData, setStep, step, reset } = useCreateMindmap()
+    const { orgId } = useParams()
     const navigate = useNavigate()
     const handleCreateMindmap = async () => {
         const creatingToast = toast.loading("Đang tạo sơ đồ tư duy...")
@@ -51,6 +52,7 @@ const Step3 = () => {
             })
             toast.success("Tạo sơ đồ tư duy thành công!")
             navigate(`/editor/${data.data._id}`)
+            reset()
         } catch (error) {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau!")
             setStep(1)
@@ -59,6 +61,11 @@ const Step3 = () => {
         }
     }
     useEffect(() => {
+        if (step < 3) {
+            navigate(`/dashboard/${orgId}/new`)
+            reset()
+        }
+        formData.set("orgId", orgId)
         handleCreateMindmap()
     }, [])
     const containerRef = useRef<HTMLDivElement>(null)
