@@ -1,3 +1,4 @@
+import { useUser } from "@/api/hooks"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -7,13 +8,33 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { authInstance } from "@/utils/axios"
+import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 export function LoginPage() {
     const navigate = useNavigate()
-    const handleGoogleLogin = () => {
-        // Handle Google login logic here
-        navigate("/dashboard/abc")
+    const { data: user, isLoading } = useUser()
+
+    useEffect(() => {
+        if (user) {
+            if (user.organizations.length === 0) {
+                navigate("/create-org")
+            } else {
+                navigate(`/dashboard/${user.organizations[0].id}`)
+            }
+        }
+    }, [user, isLoading])
+
+    const handleGoogleLogin = async () => {
+        try {
+            await authInstance.post("login", {
+                provider: "google",
+                redirectAfterLogin: `${window.location.origin}/auth/callback`,
+            })
+        } catch (error) {
+            window.location.href = error.response.data.url
+        }
     }
 
     return (
