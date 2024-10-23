@@ -2,12 +2,18 @@ import { Button } from "@/components/ui/button"
 import { useCreateMindmap } from "@/stores/create-mindmap-store"
 import { BrainCircuit, Network } from "lucide-react"
 import React, { useEffect } from "react"
+import { useParams } from "react-router-dom"
 
 const Step1 = () => {
+    const { orgId } = useParams()
     const { formData, nextStep } = useCreateMindmap()
 
     useEffect(() => {
         formData.delete("type")
+        formData.set("orgId", orgId)
+        formData.set("documentsId", "[]")
+        formData.set("depth", "5")
+        formData.set("child", "4")
     }, [])
 
     const handleSelectType = (type: "creative" | "summary") => {

@@ -118,12 +118,12 @@ const routers = createBrowserRouter([
 ])
 
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <QueryClientProvider client={queryClient}>
-            <TooltipProvider>
-                <RouterProvider router={routers} />
-                <Toaster />
-            </TooltipProvider>
-        </QueryClientProvider>
-    </StrictMode>
+    // <StrictMode>
+    <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+            <RouterProvider router={routers} />
+            <Toaster />
+        </TooltipProvider>
+    </QueryClientProvider>
+    // </StrictMode>
 )

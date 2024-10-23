@@ -33,7 +33,7 @@ const Sidebar = () => {
 
     const form = useCreateMindmap()
     return (
-        <div className="hidden border-r bg-muted/40 md:block">
+        <div className="hidden border-r bg-muted/40 md:block h-full">
             <div className="flex h-full max-h-screen flex-col">
                 <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
                     <Link
@@ -44,38 +44,36 @@ const Sidebar = () => {
                         <span className="">MindGPT</span>
                     </Link>
                 </div>
-                <div className="flex-1">
-                    <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-                        <SparklesText className="my-4" disabled={!createHover}>
-                            <Button
-                                className="w-full bg-gradient-to-br from-purple-500 to-pink-500 shadow-md font-bold uppercase group"
-                                size="lg"
-                                onMouseOver={() => setCreateHover(true)}
-                                onMouseLeave={() => setCreateHover(false)}
-                                asChild
-                            >
-                                <Link to={`/dashboard/${orgId}/new`}>
-                                    Tạo sơ đồ tư duy
-                                </Link>
-                            </Button>
-                        </SparklesText>
-                        <Separator className="mb-4" />
-                        {sideBarItems.map((item) => (
-                            <Link
-                                key={item.label}
-                                to={`/dashboard/${orgId}/${item.href}`}
-                                className={` flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all ${
-                                    getLastPath(pathname) === item.href
-                                        ? "bg-primary text-primary-foreground"
-                                        : "hover:text-primary "
-                                }`}
-                            >
-                                {item.icon}
-                                {item.label}
+                <nav className="grow flex flex-col items-start px-2 text-sm font-medium lg:px-4">
+                    <SparklesText className="my-4" disabled={!createHover}>
+                        <Button
+                            className="w-full bg-gradient-to-br from-purple-500 to-pink-500 shadow-md font-bold uppercase group"
+                            size="lg"
+                            onMouseOver={() => setCreateHover(true)}
+                            onMouseLeave={() => setCreateHover(false)}
+                            asChild
+                        >
+                            <Link to={`/dashboard/${orgId}/new`}>
+                                Tạo sơ đồ tư duy
                             </Link>
-                        ))}
-                    </nav>
-                </div>
+                        </Button>
+                    </SparklesText>
+                    <Separator className="mb-4" />
+                    {sideBarItems.map((item) => (
+                        <Link
+                            key={item.label}
+                            to={`/dashboard/${orgId}/${item.href}`}
+                            className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all ${
+                                getLastPath(pathname) === item.href
+                                    ? "bg-primary text-primary-foreground"
+                                    : "hover:text-primary "
+                            }`}
+                        >
+                            {item.icon}
+                            {item.label}
+                        </Link>
+                    ))}
+                </nav>
             </div>
         </div>
     )
