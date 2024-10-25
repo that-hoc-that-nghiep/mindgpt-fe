@@ -8,7 +8,7 @@ export const useMindmaps = (
     keyword: string
 ) => {
     return useQuery({
-        queryKey: ["mindmaps", orgId],
+        queryKey: ["mindmaps", orgId, limit, page, keyword],
         queryFn: () => getMindmaps(orgId, limit, page, keyword),
     })
 }

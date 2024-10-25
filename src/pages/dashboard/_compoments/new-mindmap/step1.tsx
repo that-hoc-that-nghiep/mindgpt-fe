@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { useCreateMindmap } from "@/stores/create-mindmap-store"
 import { BrainCircuit, Network } from "lucide-react"
-import React, { useEffect } from "react"
+import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 
 const Step1 = () => {
@@ -26,7 +26,7 @@ const Step1 = () => {
             <div className="flex items-center justify-center gap-12">
                 <Button
                     variant="outline"
-                    className="bg-gradient-to-br from-yellow-600 to-yellow-600 hover:to-yellow-300 text-white w-80 h-60 flex flex-col items-center justify-center gap-6"
+                    className="hover:bg-primary text-primary hover:text-white w-80 h-60 flex flex-col items-center justify-center gap-6"
                     onClick={() => handleSelectType("creative")}
                 >
                     <span>

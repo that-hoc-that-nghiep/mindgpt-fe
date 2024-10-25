@@ -28,6 +28,7 @@ export default function MindmapPage() {
         page || "1",
         keyword
     )
+
     const totalPage = useMemo(() => {
         if (data?.data.total) {
             return Math.ceil(data.data.total / parseInt(PAGE_SIZE))
