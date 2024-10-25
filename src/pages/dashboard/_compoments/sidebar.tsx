@@ -45,7 +45,10 @@ const Sidebar = () => {
                     </Link>
                 </div>
                 <nav className="grow flex flex-col items-start px-2 text-sm font-medium lg:px-4">
-                    <SparklesText className="my-4" disabled={!createHover}>
+                    <SparklesText
+                        className="my-4 w-full"
+                        disabled={!createHover}
+                    >
                         <Button
                             className="w-full bg-gradient-to-br from-purple-500 to-pink-500 shadow-md font-bold uppercase group"
                             size="lg"

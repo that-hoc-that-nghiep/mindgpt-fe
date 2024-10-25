@@ -81,7 +81,7 @@ const routers = createBrowserRouter([
                 element: <Outlet />,
                 children: [
                     {
-                        path: ":mindmapId",
+                        path: ":orgId/:mindmapId",
                         element: <MindmapEditorLayout />,
                         children: [
                             {

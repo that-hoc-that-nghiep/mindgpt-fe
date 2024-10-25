@@ -15,6 +15,7 @@ import { Link, useParams } from "react-router-dom"
 import { useMindmaps } from "../_api/hooks"
 import { useQueryParams } from "@/hooks"
 import MindmapCard from "../_compoments/mindmap-card"
+import CardSkeleton from "../_compoments/card-skeleton"
 
 const PAGE_SIZE = "10"
 
@@ -38,10 +39,13 @@ export default function MindmapPage() {
         <>
             <h1 className="section-title">Sơ đồ tư duy</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 min-h-[656px] gap-4">
-                {isLoading ||
-                    data.data.mindmaps.map((mindmap) => (
-                        <MindmapCard mindmap={mindmap} key={mindmap._id} />
-                    ))}
+                {isLoading
+                    ? Array.from({ length: 8 }).map((_, index) => (
+                          <CardSkeleton key={index} />
+                      ))
+                    : data?.data?.mindmaps.map((mindmap) => (
+                          <MindmapCard mindmap={mindmap} key={mindmap._id} />
+                      ))}
             </div>
             <div className="mt-8">
                 <Pagination>

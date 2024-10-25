@@ -2,9 +2,15 @@ import { useState } from "react"
 import Mindmap from "../_components/Mindmap"
 import ModalSide from "../_components/ModalSide"
 import TakeNote from "../_components/TakeNote"
+import { useMindmap } from "../_api/hooks"
+import { useParams } from "react-router-dom"
 
 const MindmapEditorPage = () => {
     const [isOpen, setOpen] = useState(false)
+    const { orgId, mindmapId } = useParams()
+    const { data, isLoading } = useMindmap(orgId, mindmapId)
+    console.log(data)
+
     return (
         <>
             <Mindmap isSetOpen={setOpen} />

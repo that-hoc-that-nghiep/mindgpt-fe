@@ -72,10 +72,7 @@ const MindmapCard = ({ mindmap }: MindmapCardProps) => {
         return
     }
     return (
-        <Card
-            key={mindmap._id}
-            className="flex flex-col h-80 overflow-hidden pt-0"
-        >
+        <Card className="flex flex-col h-80 overflow-hidden pt-0">
             <CardHeader className="aspect-video flex items-center justify-center p-0">
                 <img
                     src={`${
@@ -93,9 +90,9 @@ const MindmapCard = ({ mindmap }: MindmapCardProps) => {
                 <h3 className="text-lg font-bold truncate">{mindmap.title}</h3>
                 <p className="text-gray-600 mt-1 text-sm">{mindmap.prompt}</p>
             </CardContent>
-            <CardFooter className="flex justify-between items-center px-4">
-                <Button className="flex-grow mr-2" variant="default" asChild>
-                    <Link to={`/editor/${mindmap._id}`}>
+            <CardFooter className="flex justify-between items-center px-4 gap-4">
+                <Button className="flex-grow" variant="success" asChild>
+                    <Link to={`/editor/${orgId}/${mindmap._id}`}>
                         <Pencil className="h-4 w-4 mr-2" />
                         Chỉnh sửa
                     </Link>
