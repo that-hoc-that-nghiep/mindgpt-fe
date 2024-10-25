@@ -22,6 +22,7 @@ import { OrgManagement } from "./pages/admin/org-management"
 import { MindmapManagement } from "./pages/admin/mindmap-management"
 import CreateOrgPage from "./pages/(auth)/create-org"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import DialogProvider from "@/context/dialog-context"
 
 const queryClient = new QueryClient()
 
@@ -121,8 +122,10 @@ createRoot(document.getElementById("root")!).render(
     // <StrictMode>
     <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-            <RouterProvider router={routers} />
-            <Toaster />
+            <DialogProvider>
+                <RouterProvider router={routers} />
+                <Toaster />
+            </DialogProvider>
         </TooltipProvider>
     </QueryClientProvider>
     // </StrictMode>

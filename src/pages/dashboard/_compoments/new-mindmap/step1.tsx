@@ -26,7 +26,7 @@ const Step1 = () => {
             <div className="flex items-center justify-center gap-12">
                 <Button
                     variant="outline"
-                    className="hover:bg-primary text-primary hover:text-white w-80 h-60 flex flex-col items-center justify-center gap-6"
+                    className="bg-gradient-to-br from-yellow-600 to-yellow-600 hover:to-yellow-300 text-white w-80 h-60 flex flex-col items-center justify-center gap-6"
                     onClick={() => handleSelectType("creative")}
                 >
                     <span>
