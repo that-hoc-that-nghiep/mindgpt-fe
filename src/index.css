@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    min-height: 100%;
+    max-height: fit-content;
+}
+
 @layer base {
     :root {
         --background: 0 0% 100%;
@@ -75,4 +80,8 @@
 
 .section-title {
     @apply text-2xl font-bold mb-6;
+}
+
+.react-flow__handle {
+    opacity: 0;
 }

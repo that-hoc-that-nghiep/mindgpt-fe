@@ -21,3 +21,5 @@ const useAuthStore = create<AuthStore, [["zustand/persist", AuthStore]]>(
 )
 
 export const useAuth = () => useAuthStore((state) => state)
+
+export const getAuth = () => useAuthStore.getState()

@@ -1,6 +1,7 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import "./index.css"
+import "reactflow/dist/style.css"
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Toaster } from "react-hot-toast"
@@ -20,6 +21,11 @@ import UserManagement from "./pages/admin/user-management"
 import { AdminLayout } from "./pages/admin/layout"
 import { OrgManagement } from "./pages/admin/org-management"
 import { MindmapManagement } from "./pages/admin/mindmap-management"
+import CreateOrgPage from "./pages/(auth)/create-org"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import DialogProvider from "@/context/dialog-context"
+import SheetProvider from "@/context/sheet-context"
+import { ReactFlowProvider } from "reactflow"
 
 const queryClient = new QueryClient()
 
@@ -36,6 +42,10 @@ const routers = createBrowserRouter([
             {
                 path: "login",
                 element: <LoginPage />,
+            },
+            {
+                path: "create-org",
+                element: <CreateOrgPage />,
             },
             {
                 path: "auth/callback",
@@ -74,7 +84,7 @@ const routers = createBrowserRouter([
                 element: <Outlet />,
                 children: [
                     {
-                        path: ":mindmapId",
+                        path: ":orgId/:mindmapId",
                         element: <MindmapEditorLayout />,
                         children: [
                             {
@@ -112,10 +122,18 @@ const routers = createBrowserRouter([
 ])
 
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <QueryClientProvider client={queryClient}>
-            <RouterProvider router={routers} />
-            <Toaster />
-        </QueryClientProvider>
-    </StrictMode>
+    // <StrictMode>
+    <QueryClientProvider client={queryClient}>
+        <ReactFlowProvider>
+            <TooltipProvider>
+                <DialogProvider>
+                    <SheetProvider>
+                        <RouterProvider router={routers} />
+                        <Toaster />
+                    </SheetProvider>
+                </DialogProvider>
+            </TooltipProvider>
+        </ReactFlowProvider>
+    </QueryClientProvider>
+    // </StrictMode>
 )
