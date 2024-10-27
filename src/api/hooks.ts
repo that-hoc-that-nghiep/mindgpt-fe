@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
     addUsersToOrg,
     deleteOrg,
+    getMindmap,
     getOrg,
     getUser,
     leaveOrg,
@@ -10,8 +11,9 @@ import {
     updateOrg,
 } from "./"
 import { useAuth } from "@/stores/auth-store"
-import { OrgResponse, UserResponse } from "@/types"
+import { MindmapResponse, OrgResponse, UserResponse } from "@/types"
 import { useCurrentOrg } from "@/stores/org-store"
+import { useCurrentMindmap } from "@/stores"
 
 export const useUser = () => {
     const { token } = useAuth()
@@ -43,6 +45,23 @@ export const useOrg = () => {
     return { data, isLoading, setOrg }
 }
 
+export const useMindmap = (orgId: string, mindmapId: string) => {
+    const queryClient = useQueryClient()
+    const { token } = useAuth()
+    if (!token) return { mindmap: null, isLoading: false }
+    if (!mindmapId) return { mindmap: null, isLoading: false }
+
+    const { data, isLoading } = useQuery({
+        queryKey: ["mindmap", orgId, mindmapId],
+        queryFn: () => getMindmap(orgId, mindmapId),
+    })
+
+    const setMindmap = (mindmap: MindmapResponse) => {
+        queryClient.setQueryData(["mindmap", orgId, mindmapId], mindmap)
+    }
+
+    return { data, isLoading, setMindmap }
+}
 export const useUpdateOrg = () => {
     return useMutation({
         mutationFn: updateOrg,

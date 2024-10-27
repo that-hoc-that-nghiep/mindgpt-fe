@@ -45,13 +45,13 @@ const Step3 = () => {
                 status: number
                 message: string
                 data: MindmapResponse
-            }>("/mindmap/create", formData, {
+            }>(`/mindmap/${orgId}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             })
             toast.success("Tạo sơ đồ tư duy thành công!")
-            navigate(`/editor/${data.data._id}`)
+            navigate(`/editor/${orgId}/${data.data._id}`)
             reset()
         } catch (error) {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau!")
@@ -65,7 +65,6 @@ const Step3 = () => {
             navigate(`/dashboard/${orgId}/new`)
             reset()
         }
-        formData.set("orgId", orgId)
         handleCreateMindmap()
     }, [])
     const containerRef = useRef<HTMLDivElement>(null)

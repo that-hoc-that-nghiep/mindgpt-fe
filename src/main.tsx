@@ -1,6 +1,7 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import "./index.css"
+import "reactflow/dist/style.css"
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Toaster } from "react-hot-toast"
@@ -23,6 +24,8 @@ import { MindmapManagement } from "./pages/admin/mindmap-management"
 import CreateOrgPage from "./pages/(auth)/create-org"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import DialogProvider from "@/context/dialog-context"
+import SheetProvider from "@/context/sheet-context"
+import { ReactFlowProvider } from "reactflow"
 
 const queryClient = new QueryClient()
 
@@ -123,8 +126,12 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
         <TooltipProvider>
             <DialogProvider>
-                <RouterProvider router={routers} />
-                <Toaster />
+                <SheetProvider>
+                    <ReactFlowProvider>
+                        <RouterProvider router={routers} />
+                        <Toaster />
+                    </ReactFlowProvider>
+                </SheetProvider>
             </DialogProvider>
         </TooltipProvider>
     </QueryClientProvider>
