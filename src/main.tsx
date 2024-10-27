@@ -26,6 +26,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import DialogProvider from "@/context/dialog-context"
 import SheetProvider from "@/context/sheet-context"
 import { ReactFlowProvider } from "reactflow"
+import { SelectedNodeProvider } from "./context/selected-node-context"
 
 const queryClient = new QueryClient()
 
@@ -128,8 +129,10 @@ createRoot(document.getElementById("root")!).render(
             <TooltipProvider>
                 <DialogProvider>
                     <SheetProvider>
-                        <RouterProvider router={routers} />
-                        <Toaster />
+                        <SelectedNodeProvider>
+                            <RouterProvider router={routers} />
+                            <Toaster />
+                        </SelectedNodeProvider>
                     </SheetProvider>
                 </DialogProvider>
             </TooltipProvider>
