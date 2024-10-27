@@ -16,19 +16,29 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Button } from "@/components/ui/button"
 import { Check, NotebookPen, Pencil, Trash2, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
 
 export interface BaseNodeData {
     label?: string
     note?: string
+    level?: number
+    textColor?: string
+    bgColor?: string
 }
 
 interface BaseNodeProps extends BaseNodeData {
     selected: boolean
     className?: string
     labelClassName?: string
+    style: React.CSSProperties
+}
+
+const nodeTextStyle: Record<number, string> = {
+    0: "text-3xl font-bold",
+    1: "text-xl font-semibold",
+    2: "text-lg",
+    3: "text-base",
 }
 
 const BaseNode = ({
@@ -36,32 +46,22 @@ const BaseNode = ({
     selected,
     className = "",
     labelClassName = "",
-    note,
+    textColor,
+    bgColor,
+    level,
+    style,
 }: BaseNodeProps) => {
-    const [editMode, { open: openEditMode, close: closeEditMode }] =
-        useDisclosure(false)
-
     const { getNode, setNodes, getNodes } = useReactFlow()
     const nodeId = useNodeId()
 
     const [labelEdit, setLabelEdit] = useState("")
     const [isSaved, setIsSaved] = useState(false)
 
-    const handleEditSave = () => {
-        setIsSaved(true)
-        closeEditMode()
-    }
-
-    const handleEditCancel = () => {
-        setLabelEdit(label)
-        closeEditMode()
-    }
-
     const sheet = useSheet()
     const handleTakeNote = () => {
         sheet.showSheet({
-            title: "Take note",
-            children: <NodeInfo />,
+            title: `${label}`,
+            children: <NodeInfo id={nodeId} />,
         })
     }
 
@@ -89,76 +89,33 @@ const BaseNode = ({
         }
     }, [isSaved, labelEdit, nodeId, getNode, getNodes, setNodes])
 
-    useEffect(() => {
-        if (!selected) {
-            handleEditCancel()
-        }
-    }, [selected])
-
     return (
         <>
             <NodeToolbar position={Position.Right} offset={20} align="center">
-                {editMode ? (
-                    <div className="flex flex-col gap-2">
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Check
-                                    className="cursor-pointer size-5 text-green-500"
-                                    onClick={handleEditSave}
-                                />
-                            </TooltipTrigger>
-                            <TooltipContent side="right">Lưu</TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <X
-                                    className="cursor-pointer size-5 text-red-500"
-                                    onClick={handleEditCancel}
-                                />
-                            </TooltipTrigger>
-                            <TooltipContent side="right">Hủy</TooltipContent>
-                        </Tooltip>
-                    </div>
-                ) : (
-                    <div className="flex flex-col gap-2">
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <NotebookPen
-                                    className="cursor-pointer size-5 text-green-500"
-                                    onClick={handleTakeNote}
-                                />
-                            </TooltipTrigger>
-                            <TooltipContent side="right">
-                                Ghi chú
-                            </TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Pencil
-                                    className="cursor-pointer size-5 text-blue-500"
-                                    onClick={() => {
-                                        openEditMode()
-                                        setLabelEdit(label!)
-                                    }}
-                                />
-                            </TooltipTrigger>
-                            <TooltipContent side="right">Sửa</TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Trash2
-                                    className="cursor-pointer size-5 text-red-500"
-                                    onClick={() => {
-                                        setNodes((nodes) =>
-                                            nodes.filter((n) => n.id !== nodeId)
-                                        )
-                                    }}
-                                />
-                            </TooltipTrigger>
-                            <TooltipContent side="right">Xóa</TooltipContent>
-                        </Tooltip>
-                    </div>
-                )}
+                <div className="flex flex-col gap-2">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <NotebookPen
+                                className="cursor-pointer size-5 text-green-500"
+                                onClick={handleTakeNote}
+                            />
+                        </TooltipTrigger>
+                        <TooltipContent side="right">Ghi chú</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Trash2
+                                className="cursor-pointer size-5 text-red-500"
+                                onClick={() => {
+                                    setNodes((nodes) =>
+                                        nodes.filter((n) => n.id !== nodeId)
+                                    )
+                                }}
+                            />
+                        </TooltipTrigger>
+                        <TooltipContent side="right">Xóa</TooltipContent>
+                    </Tooltip>
+                </div>
             </NodeToolbar>
 
             <div
@@ -166,7 +123,7 @@ const BaseNode = ({
                     ` 
                     w-auto h-auto p-1
                     transition-all duration-150 shadow-md
-                    bg-white flex items-center justify-center border border-slate-500
+                    flex items-center justify-center border border-slate-500
                     ${
                         (selected || selected) &&
                         "border-green-600 scale-110 border-2"
@@ -174,22 +131,22 @@ const BaseNode = ({
                       `,
                     className
                 )}
+                style={{
+                    ...style,
+                }}
             >
                 <div className="flex items-center w-full h-full gap-1">
                     <div className="flex-grow text-center text-xs">
                         {label && (
                             <div className={cn(labelClassName)}>
-                                {editMode ? (
-                                    <Input
-                                        value={labelEdit}
-                                        onChange={(e) =>
-                                            setLabelEdit(e.currentTarget.value)
-                                        }
-                                        className="w-full text-center border border-black rounded-sm"
-                                    />
-                                ) : (
-                                    <span>{label}</span>
-                                )}
+                                <span
+                                    style={{
+                                        color: textColor,
+                                    }}
+                                    className={nodeTextStyle[level!]}
+                                >
+                                    {label}
+                                </span>
                             </div>
                         )}
                     </div>

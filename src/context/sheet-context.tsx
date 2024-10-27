@@ -1,6 +1,7 @@
 import {
     Sheet,
     SheetContent,
+    SheetDescription,
     SheetHeader,
     SheetTitle,
 } from "@/components/ui/sheet"
@@ -14,9 +15,9 @@ interface SheetProps {
 }
 
 const sheetSizes: Record<string, string> = {
-    sm: "96px",
-    md: "256px",
-    lg: "512px",
+    sm: "256px",
+    md: "512px",
+    lg: "768px",
 }
 
 export const SheetContext = createContext(
@@ -37,7 +38,7 @@ const SheetProvider = ({ children }) => {
 
     const showSheet = ({
         title,
-        size = "md",
+        size = "lg",
         position = "right",
         children,
     }: SheetProps) => {
@@ -72,6 +73,7 @@ const SheetProvider = ({ children }) => {
                 >
                     <SheetHeader>
                         <SheetTitle>{sheetContent.title}</SheetTitle>
+                        <SheetDescription />
                     </SheetHeader>
                     {sheetContent.children}
                 </SheetContent>

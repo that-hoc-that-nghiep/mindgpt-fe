@@ -1,4 +1,6 @@
-import { Node, Position } from "reactflow"
+import { CommonNodeData } from "@/nodes/common-node"
+import { EdgeResponse, NodeResponse } from "@/types"
+import { Edge, Node, Position } from "reactflow"
 
 export const getLastPath = (path: string) => {
     const paths = path.split("/")
@@ -98,5 +100,113 @@ export function getEdgeParams(source: Node, target: Node) {
         ty: targetIntersectionPoint.y,
         sourcePos,
         targetPos,
+    }
+}
+
+const levelToSize = {
+    0: 180,
+    1: 140,
+    2: 120,
+    3: 100,
+    4: 100,
+}
+
+const levelToColor = {
+    0: {
+        background: "#E9D8FD",
+        text: "#44337A",
+    },
+    1: {
+        background: "#FED7D7",
+        text: "#742A2A",
+    },
+    2: {
+        background: "#FEEBC8",
+        text: "#7B341E",
+    },
+    3: {
+        background: "#C6F6D5",
+        text: "#22543D",
+    },
+    4: {
+        background: "#BEE3F8",
+        text: "#2A4365",
+    },
+    5: {
+        background: "#E2E8F0",
+        text: "#1A202C",
+    },
+}
+
+export const convertNodeToMindmapNode = (
+    node: NodeResponse
+): Node<CommonNodeData> => {
+    return {
+        id: node.id,
+        type: "common",
+        position: {
+            x: node.pos.x,
+            y: node.pos.y,
+        },
+        data: {
+            label: node.label,
+            note: node.note,
+            level: node.level,
+            bgColor:
+                node.bg_color === "#fff"
+                    ? levelToColor[node.level].background
+                    : node.bg_color,
+            textColor:
+                node.text_color === "#000"
+                    ? levelToColor[node.level].text
+                    : node.text_color,
+            width:
+                node.size.width === 0
+                    ? levelToSize[node.level] * 2
+                    : node.size.width,
+            height:
+                node.size.height === 0
+                    ? levelToSize[node.level]
+                    : node.size.height,
+        },
+        width: node.size.width * 2,
+        height: node.size.height,
+    }
+}
+
+export const convertEdgeToMindmapEdge = (edge: EdgeResponse): Edge => {
+    return {
+        id: edge.id,
+        source: edge.from,
+        target: edge.to,
+        label: edge.name,
+    }
+}
+
+export const convertMindmapNodeToNode = (node: Node<CommonNodeData>) => {
+    return {
+        id: node.id,
+        pos: {
+            x: node.position.x,
+            y: node.position.y,
+        },
+        label: node.data.label,
+        note: node.data.note,
+        level: node.data.level,
+        bg_color: node.data.bgColor,
+        text_color: node.data.textColor,
+        size: {
+            width: node.data.width,
+            height: node.data.height,
+        },
+    }
+}
+
+export const convertMindmapEdgeToEdge = (edge: Edge) => {
+    return {
+        id: edge.id,
+        from: edge.source,
+        to: edge.target,
+        name: edge.label,
     }
 }

@@ -27,6 +27,8 @@ import { useMouse } from "@mantine/hooks"
 import { nodeTypes } from "@/nodes"
 import { edgeTypes } from "@/edges"
 import Cursor from "@/components/cursor"
+import { CommonNodeData } from "@/nodes/common-node"
+import { convertEdgeToMindmapEdge, convertNodeToMindmapNode } from "@/utils"
 
 const cusorColors = [
     "#991b1b",
@@ -107,7 +109,7 @@ const OnlineUsers = ({
 const MindmapEditorPage = () => {
     const { data: user } = useUser()
     const { fitView } = useReactFlow()
-    const [nodes, setNodes, onNodesChange] = useNodesState([])
+    const [nodes, setNodes, onNodesChange] = useNodesState<CommonNodeData>([])
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
     const { orgId, mindmapId } = useParams()
     const {
@@ -133,26 +135,10 @@ const MindmapEditorPage = () => {
     useEffect(() => {
         if (mindmap) {
             setNodes(
-                mindmap?.nodes.map((node) => ({
-                    id: node.id,
-                    type: "common",
-                    position: {
-                        x: node.pos.x,
-                        y: node.pos.y,
-                    },
-                    data: {
-                        label: node.label,
-                        note: node.note,
-                    },
-                }))
+                mindmap?.nodes.map((node) => convertNodeToMindmapNode(node))
             )
             setEdges(
-                mindmap?.edges.map((edge) => ({
-                    id: edge.id,
-                    source: edge.from,
-                    target: edge.to,
-                    label: edge.name,
-                }))
+                mindmap?.edges.map((edge) => convertEdgeToMindmapEdge(edge))
             )
 
             setTimeout(() => {
@@ -187,17 +173,17 @@ const MindmapEditorPage = () => {
 
     const { ref: mouseRef, x, y } = useMouse()
 
-    const handleRealtimeChange = (e: React.PointerEvent<HTMLDivElement>) => {
-        setUser({
-            id: user.id,
-            cursor: {
-                x,
-                y,
-            },
-            name: user.name,
-            picture: user.picture,
-        })
-    }
+    // const handleRealtimeChange = (e: React.PointerEvent<HTMLDivElement>) => {
+    //     setUser({
+    //         id: user.id,
+    //         cursor: {
+    //             x,
+    //             y,
+    //         },
+    //         name: user.name,
+    //         picture: user.picture,
+    //     })
+    // }
 
     // if (isStorageLoading) {
     //     return (
@@ -238,7 +224,7 @@ const MindmapEditorPage = () => {
             onSelectionChange={onSelectionChange}
             panOnScroll
             selectionOnDrag
-            panOnDrag={panOnDrag}
+            panOnDrag={[1, 2]}
             selectionMode={SelectionMode.Partial}
             fitView
             defaultEdgeOptions={{
@@ -246,7 +232,7 @@ const MindmapEditorPage = () => {
                 type: "floating",
                 markerEnd: { type: MarkerType.ArrowClosed },
             }}
-            onPointerMove={handleRealtimeChange}
+            // onPointerMove={handleRealtimeChange}
             ref={mouseRef}
         >
             {/* {others.map((user, index) => (

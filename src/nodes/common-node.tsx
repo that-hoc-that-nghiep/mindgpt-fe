@@ -1,7 +1,10 @@
 import { NodeProps } from "reactflow"
 import BaseNode, { BaseNodeData } from "./base-node"
 
-export interface CommonNodeData extends BaseNodeData {}
+export interface CommonNodeData extends BaseNodeData {
+    width?: number
+    height?: number
+}
 
 export const CommonNode = ({ data, selected }: NodeProps<CommonNodeData>) => {
     return (
@@ -9,7 +12,14 @@ export const CommonNode = ({ data, selected }: NodeProps<CommonNodeData>) => {
             label={data.label}
             selected={selected}
             note={data.note}
-            className="w-[180px] h-[50px] rounded-md"
+            className="rounded-md"
+            textColor={data.textColor}
+            level={data.level}
+            style={{
+                width: data.width,
+                height: data.height,
+                backgroundColor: data.bgColor,
+            }}
         />
     )
 }
