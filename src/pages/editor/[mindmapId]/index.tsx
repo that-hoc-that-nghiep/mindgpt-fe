@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { User } from "lucide-react"
 import useRoomStore from "@/stores/room-store"
-import { useLayoutedElements } from "@/hooks"
+import { useLayoutedElements, useRemoveLogo } from "@/hooks"
 import { useMindmap, useUser } from "@/api/hooks"
 import ReactFlow, {
     Background,
@@ -107,6 +107,7 @@ const OnlineUsers = ({
 }
 
 const MindmapEditorPage = () => {
+    useRemoveLogo()
     const { data: user } = useUser()
     const { fitView } = useReactFlow()
     const [nodes, setNodes, onNodesChange] = useNodesState<CommonNodeData>([])
