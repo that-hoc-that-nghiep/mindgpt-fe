@@ -13,7 +13,6 @@ import {
 import { useAuth } from "@/stores/auth-store"
 import { MindmapResponse, OrgResponse, UserResponse } from "@/types"
 import { useCurrentOrg } from "@/stores/org-store"
-import { useCurrentMindmap } from "@/stores"
 import { useEffect } from "react"
 
 export const useUser = () => {
