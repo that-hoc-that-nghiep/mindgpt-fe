@@ -134,6 +134,12 @@ export default function ChatBot() {
                     className="flex flex-col gap-4 p-4"
                     ref={chatSectionViewport}
                 >
+                    {conversation.length === 0 && (
+                        <Message
+                            role="ai"
+                            content="Chào bạn, mình là trợ lý ảo của MindGPT. Mình có thể giúp gì cho bạn?"
+                        />
+                    )}
                     {conversation.map((message, index) => (
                         <Message key={index} {...message} />
                     ))}
