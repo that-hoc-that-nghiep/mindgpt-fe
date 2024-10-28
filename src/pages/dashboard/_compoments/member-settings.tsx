@@ -1,5 +1,6 @@
 import { useOrg, useUser } from "@/api/hooks"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -210,7 +211,7 @@ const MemberSettings = () => {
     return (
         <Card className="w-full flex-grow">
             <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-xl">Quản lý thành viên</CardTitle>
+                <CardTitle className="text-xl">Thành viên</CardTitle>
                 {isOwner && (
                     <Button
                         variant="success"
@@ -239,9 +240,23 @@ const MemberSettings = () => {
                                         </AvatarFallback>
                                     </Avatar>
                                     <div>
-                                        <p className="font-medium">
-                                            {member.name}
-                                        </p>
+                                        <div className="flex gap-2">
+                                            <p className="font-semibold">
+                                                {member.name}
+                                            </p>
+                                            <Badge
+                                                className="hover:bg-primary"
+                                                variant={
+                                                    member.is_owner
+                                                        ? "destructive"
+                                                        : "default"
+                                                }
+                                            >
+                                                {member.is_owner
+                                                    ? "Chủ nhóm"
+                                                    : "Thành viên"}
+                                            </Badge>
+                                        </div>
                                         <p className="text-sm text-muted-foreground">
                                             {member.email}
                                         </p>
