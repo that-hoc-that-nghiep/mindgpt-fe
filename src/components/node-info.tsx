@@ -83,13 +83,8 @@ const NodeInfo = ({ id }: NodeInfoProps) => {
         })
     }
 
-    const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        console.log("Saving node settings:", node)
-    }
-
     return (
-        <form onSubmit={handleSave}>
+        <>
             <div className="grid gap-6 py-6">
                 <div className="space-y-2">
                     <Label
@@ -219,12 +214,7 @@ const NodeInfo = ({ id }: NodeInfoProps) => {
                     />
                 </div>
             </div>
-            <div className="flex justify-end gap-2 w-full">
-                <Button type="submit" variant="success">
-                    Lưu
-                </Button>
-            </div>
-        </form>
+        </>
     )
 }
 
