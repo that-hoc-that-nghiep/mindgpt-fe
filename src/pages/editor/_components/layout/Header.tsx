@@ -49,6 +49,7 @@ export default function Header() {
             //     data: mindmap.data,
             // })
             toast.success("Đã lưu")
+            navigate(`/dashboard/${orgId}`)
         } catch (error) {
             toast.error("Có lỗi xảy ra, vui lòng thử lại")
         } finally {
