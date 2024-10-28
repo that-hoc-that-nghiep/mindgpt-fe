@@ -1,6 +1,8 @@
 import { CommonNodeData } from "@/nodes/common-node"
 import { EdgeResponse, NodeResponse } from "@/types"
 import { Edge, Node, Position } from "reactflow"
+import DOMPurify from "dompurify"
+import { marked } from "marked"
 
 export const getLastPath = (path: string) => {
     const paths = path.split("/")
@@ -213,4 +215,9 @@ export const convertMindmapEdgeToEdge = (edge: Edge) => {
 
 export function capitalizeFirstLetter(val: string) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1)
+}
+
+export const parseMarkdownToHTML = (note: string): string => {
+    const result = marked.parse(note)
+    return DOMPurify.sanitize(result as string)
 }
