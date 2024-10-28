@@ -13,7 +13,6 @@ import {
 import { useAuth } from "@/stores/auth-store"
 import { MindmapResponse, OrgResponse, UserResponse } from "@/types"
 import { useCurrentOrg } from "@/stores/org-store"
-import { useCurrentMindmap } from "@/stores"
 
 export const useUser = () => {
     const { token } = useAuth()
@@ -32,13 +31,13 @@ export const useUser = () => {
 
 export const useOrg = () => {
     const { currentOrg: orgId } = useCurrentOrg()
-    const queryClient = useQueryClient()
-    if (!orgId) return { org: null, isLoading: false }
-
     const { data, isLoading } = useQuery({
         queryKey: ["org", orgId],
         queryFn: () => getOrg(orgId),
     })
+    const queryClient = useQueryClient()
+    if (!orgId) return { org: null, isLoading: false }
+
     const setOrg = (org: OrgResponse) => {
         queryClient.setQueryData(["org", orgId], org)
     }
