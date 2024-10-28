@@ -25,7 +25,7 @@ const removeAction: Record<string, string> = {
 
 const GeneralOrgSettings = () => {
     const { isLoading: isOrgLoading, data: orgData, setOrg } = useOrg()
-    const { isLoading: isUserLoading, data: userData } = useUser()
+    const { isLoading: isUserLoading, data: userData, setUser } = useUser()
     const [orgName, setOrgName] = useState(orgData?.name || "")
     const [isOwner, setIsOwner] = useState<boolean | null>(null)
 
@@ -90,6 +90,12 @@ const GeneralOrgSettings = () => {
             })
             queryClient.invalidateQueries({
                 queryKey: ["user", userData.id],
+            })
+            setUser({
+                ...userData,
+                organizations: userData.organizations.filter(
+                    (org) => org.id !== orgData.id
+                ),
             })
             navigate("/login")
         } catch (error) {

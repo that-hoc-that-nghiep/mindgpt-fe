@@ -67,8 +67,7 @@ export default function ChatBot() {
     const chatSectionViewport = useRef<HTMLDivElement>(null)
     const scrollBottom = useCallback(() => {
         if (chatSectionViewport.current) {
-            chatSectionViewport.current.scrollTop =
-                chatSectionViewport.current.scrollHeight
+            chatSectionViewport.current.scrollIntoView(false)
         }
     }, [])
 
@@ -130,8 +129,11 @@ export default function ChatBot() {
     }
     return (
         <div className="flex flex-col justify-between size-full gap-4">
-            <ScrollArea className="flex-grow" ref={chatSectionViewport}>
-                <div className="flex flex-col gap-4 p-4">
+            <ScrollArea className="flex-grow">
+                <div
+                    className="flex flex-col gap-4 p-4"
+                    ref={chatSectionViewport}
+                >
                     {conversation.map((message, index) => (
                         <Message key={index} {...message} />
                     ))}
