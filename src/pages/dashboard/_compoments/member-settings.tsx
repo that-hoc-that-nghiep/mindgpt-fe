@@ -1,157 +1,288 @@
+import { useOrg, useUser } from "@/api/hooks"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { Label } from "@radix-ui/react-dropdown-menu"
-import { UserPlus, UserX } from "lucide-react"
-import React, { useState } from "react"
+import { Label } from "@/components/ui/label"
+import { useDialog } from "@/hooks"
+import { OrgResponse } from "@/types"
+import { authInstance } from "@/utils/axios"
+import { useQueryClient } from "@tanstack/react-query"
+import { Ellipsis, User2, UserPlus } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import toast from "react-hot-toast"
+
+const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
 
 const MemberSettings = () => {
-    const [members, setMembers] = useState([
-        { id: 1, name: "John Doe", email: "john@example.com" },
-        { id: 2, name: "Jane Smith", email: "jane@example.com" },
-    ])
-
-    const handleAddMember = () => {
-        const newMember = {
-            id: members.length + 1,
-            name: name,
-            email: email,
+    const { data: orgData, isLoading: isOrgLoading, setOrg } = useOrg()
+    const { data: userData, isLoading: isUserLoading } = useUser()
+    const [isOwner, setIsOwner] = useState<boolean | null>(null)
+    const addForm = useForm({
+        defaultValues: {
+            email: "",
+        },
+    })
+    const queryClient = useQueryClient()
+    useEffect(() => {
+        if (userData && orgData) {
+            const user = userData.organizations.find(
+                (org) => org.id === orgData.id
+            )
+            setIsOwner(user?.is_owner || false)
         }
-        setMembers([...members, newMember])
+    }, [userData, orgData])
+    const dialog = useDialog()
+
+    const handleAddMember = async (usersEmail: string[]) => {
+        const loading = toast.loading("Đang thêm thành viên...")
+        // Validate form
+        if (
+            !addForm.getValues("email") ||
+            addForm.getValues("email").trim() === ""
+        ) {
+            toast.error("Email không được để trống")
+            toast.dismiss(loading)
+            return
+        }
+        if (
+            !emailRegex.test(addForm.getValues("email").toLowerCase()) ||
+            addForm.getValues("email").length > 255
+        ) {
+            toast.error("Email không hợp lệ")
+            toast.dismiss(loading)
+            return
+        }
+        try {
+            const { data } = await authInstance.put<OrgResponse>(
+                `/org/${orgData.id}/add`,
+                {
+                    usersEmail,
+                }
+            )
+            toast.success("Thêm thành viên thành công")
+            setOrg(data)
+            addForm.reset()
+        } catch (error) {
+            toast.error("Thêm thành viên thất bại")
+        } finally {
+            dialog.hideDialog()
+            toast.dismiss(loading)
+        }
     }
 
-    const handleDeleteMember = (id: number) => {
-        const updatedMembers = members.filter((member) => member.id !== id)
-        setMembers(updatedMembers)
+    const showAddMemberDialog = () => {
+        dialog.showDialog({
+            title: "Thêm thành viên",
+            children: (
+                <div>
+                    <Label htmlFor="new-member-email">
+                        Email của thành viên mới
+                    </Label>
+                    <Input
+                        id="new-member-email"
+                        {...addForm.register("email")}
+                        placeholder="john.doe@example.com"
+                    />
+                </div>
+            ),
+            footer: (
+                <div className="flex justify-end space-x-4">
+                    <Button variant="outline" onClick={dialog.hideDialog}>
+                        Hủy
+                    </Button>
+                    <Button
+                        variant={"success"}
+                        onClick={() =>
+                            handleAddMember([addForm.getValues("email")])
+                        }
+                    >
+                        Thêm
+                    </Button>
+                </div>
+            ),
+        })
     }
 
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
+    const handleRemoveMember = async (usersEmail: string[]) => {
+        const loading = toast.loading("Đang xóa thành viên...")
+        try {
+            await authInstance.put(`/org/${orgData.id}/remove`, {
+                usersEmail,
+            })
+            toast.success("Xóa thành viên thành công")
+            setOrg({
+                ...orgData,
+                users: orgData.users.filter(
+                    (user) => !usersEmail.includes(user.email)
+                ),
+            })
+        } catch (error) {
+            toast.error("Xóa thành viên thất bại")
+        } finally {
+            dialog.hideDialog()
+            toast.dismiss(loading)
+        }
+    }
+
+    const handelConfirmRemove = (usersEmail: string[]) => {
+        dialog.showDialog({
+            title: "Xác nhận xóa thành viên",
+            children: (
+                <div>
+                    <p className="text-sm">
+                        Bạn có chắc chắn muốn xóa thành viên này không?
+                    </p>
+                </div>
+            ),
+            footer: (
+                <div className="flex justify-end space-x-4">
+                    <Button variant="outline" onClick={dialog.hideDialog}>
+                        Hủy
+                    </Button>
+                    <Button
+                        variant={"destructive"}
+                        onClick={() => handleRemoveMember(usersEmail)}
+                    >
+                        Xóa
+                    </Button>
+                </div>
+            ),
+        })
+    }
+
+    const handleTransferOwnership = async (newOwnerEmail: string) => {
+        const loading = toast.loading("Đang chuyển giao quyền...")
+        try {
+            await authInstance.put(`/org/${orgData.id}/transfer`, {
+                newOwnerEmail,
+            })
+            toast.success("Đã chuyển giao quyền")
+            queryClient.invalidateQueries({
+                queryKey: ["org", orgData.id],
+            })
+            queryClient.invalidateQueries({
+                queryKey: ["user", userData.id],
+            })
+            setIsOwner(false)
+        } catch (error) {
+            toast.error("Chuyển giao quyền thất bại")
+        } finally {
+            dialog.hideDialog()
+            toast.dismiss(loading)
+        }
+    }
+
+    const handleConfirmTransfer = (newOwnerEmail: string) => {
+        dialog.showDialog({
+            title: "Xác nhận chuyển giao quyền",
+            children: (
+                <div>
+                    <p className="text-sm">
+                        Bạn có chắc chắn muốn chuyển giao quyền sở hữu nhóm này
+                        không?
+                    </p>
+                </div>
+            ),
+            footer: (
+                <div className="flex justify-end space-x-4">
+                    <Button variant="outline" onClick={dialog.hideDialog}>
+                        Hủy
+                    </Button>
+                    <Button
+                        variant={"success"}
+                        onClick={() => handleTransferOwnership(newOwnerEmail)}
+                    >
+                        Chuyển giao
+                    </Button>
+                </div>
+            ),
+        })
+    }
+
     return (
         <Card className="w-full flex-grow">
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-xl">Quản lý thành viên</CardTitle>
+                {isOwner && (
+                    <Button
+                        variant="success"
+                        size="sm"
+                        disabled={isOrgLoading || isUserLoading}
+                        onClick={showAddMemberDialog}
+                    >
+                        <UserPlus className="mr-2 h-4 w-4" />
+                        Thêm thành viên
+                    </Button>
+                )}
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
-                    {members.map((member) => (
-                        <div
-                            key={member.id}
-                            className="flex items-center justify-between space-x-4"
-                        >
-                            <div>
-                                <p className="font-medium">{member.name}</p>
-                                <p className="text-sm text-muted-foreground">
-                                    {member.email}
-                                </p>
-                            </div>
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button variant="destructive" size="sm">
-                                        <UserX className="h-4 w-4" />
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-[425px] ">
-                                    <DialogHeader>
-                                        <DialogTitle className="mt-4">
-                                            Are you sure to remove this{" "}
-                                            {member.name} from org
-                                        </DialogTitle>
-                                    </DialogHeader>
-                                    <DialogFooter className="flex items-center sm:justify-between space-x-4">
-                                        <DialogClose asChild>
-                                            <Button type="button">
-                                                Cancel
-                                            </Button>
-                                        </DialogClose>
-                                        <DialogClose asChild>
-                                            <Button
-                                                type="submit"
-                                                variant="destructive"
-                                                onClick={() =>
-                                                    handleDeleteMember(
-                                                        member.id
+                    {!isOrgLoading ? (
+                        orgData.users.map((member) => (
+                            <div
+                                key={member.id}
+                                className="flex items-center justify-between space-x-4"
+                            >
+                                <div className="flex gap-4 items-center">
+                                    <Avatar>
+                                        <AvatarImage src={member.picture} />
+                                        <AvatarFallback>
+                                            <User2 className="size-4" />
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <p className="font-medium">
+                                            {member.name}
+                                        </p>
+                                        <p className="text-sm text-muted-foreground">
+                                            {member.email}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {isOwner && !member.is_owner && (
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger>
+                                            <Ellipsis className="size-6" />
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem
+                                                onClick={() => {
+                                                    handleConfirmTransfer(
+                                                        member.email
                                                     )
+                                                }}
+                                            >
+                                                Chuyển quyền sở hữu
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                className="text-red-600"
+                                                onClick={() =>
+                                                    handelConfirmRemove([
+                                                        member.email,
+                                                    ])
                                                 }
                                             >
-                                                Remove
-                                            </Button>
-                                        </DialogClose>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-                    ))}
+                                                Xóa thành viên
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </CardContent>
-            <CardFooter>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="success">
-                            <UserPlus className="mr-2 h-4 w-4" />
-                            Add Member
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                            <DialogTitle>Add members to org</DialogTitle>
-                            <DialogDescription>
-                                Enter email to find
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label className="text-right">Email</Label>
-                                <Input
-                                    id="email"
-                                    placeholder="Alan@gmail.com"
-                                    className="col-span-3"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label className="text-right">Name</Label>
-                                <Input
-                                    id="name"
-                                    placeholder="Alan"
-                                    className="col-span-3"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <DialogClose asChild>
-                                <Button
-                                    type="submit"
-                                    variant="default"
-                                    onClick={() => handleAddMember()}
-                                >
-                                    Add
-                                </Button>
-                            </DialogClose>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </CardFooter>
         </Card>
     )
 }
