@@ -1,34 +1,38 @@
 import { useMindmap } from "@/api/hooks"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useDialog } from "@/hooks"
-import { useCurrentMindmap } from "@/stores"
+import { useDialog, useMindmapThumbnail } from "@/hooks"
+import { CommonNodeData } from "@/nodes/common-node"
+import { convertMindmapEdgeToEdge, convertMindmapNodeToNode } from "@/utils"
+// import { useCurrentMindmap } from "@/stores"
+import { instance } from "@/utils/axios"
 import { BrainCircuit, Check, PenSquare } from "lucide-react"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import toast, { useToasterStore } from "react-hot-toast"
 import { Link, useNavigate, useParams } from "react-router-dom"
+import { useReactFlow } from "reactflow"
 interface IHeaderProps {
     setIsOpen: Dispatch<SetStateAction<boolean>>
 }
 export default function Header() {
     const { orgId, mindmapId } = useParams()
-    const { data: mindmapData } = useMindmap(orgId, mindmapId)
-    const { mindmap, setMindmap } = useCurrentMindmap()
+    const { data: mindmapData, setMindmap } = useMindmap(orgId, mindmapId)
     const [saving, setSaving] = useState(false)
-    const [text, setText] = useState(mindmap?.title || "")
+    const [text, setText] = useState(mindmapData?.title || "")
     const [isEditing, setIsEditing] = useState(false)
     const dialog = useDialog()
     const navigate = useNavigate()
+    const getThumbnail = useMindmapThumbnail()
+    const { getNodes, getEdges } = useReactFlow<CommonNodeData>()
     useEffect(() => {
         if (mindmapData) {
             setText(mindmapData.title)
-            setMindmap(mindmapData)
         }
     }, [mindmapData])
 
     const handleSetTitle = () => {
         setMindmap({
-            ...mindmap,
+            ...mindmapData,
             title: text,
         })
         setIsEditing(false)
@@ -44,10 +48,12 @@ export default function Header() {
         setSaving(true)
         const loading = toast.loading("Đang lưu sơ đồ...")
         try {
-            // await updateMindmap(orgId, mindmapId, {
-            //     title: mindmap.title,
-            //     data: mindmap.data,
-            // })
+            await instance.patch(`/mindmap/${orgId}/${mindmapId}`, {
+                title: mindmapData.title,
+                thumbnail: await getThumbnail(),
+                nodes: getNodes().map((node) => convertMindmapNodeToNode(node)),
+                edges: getEdges().map((edge) => convertMindmapEdgeToEdge(edge)),
+            })
             toast.success("Đã lưu")
             navigate(`/dashboard/${orgId}`)
         } catch (error) {

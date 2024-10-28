@@ -171,8 +171,6 @@ export const convertNodeToMindmapNode = (
                     ? levelToSize[node.level]
                     : node.size.height,
         },
-        width: node.size.width * 2,
-        height: node.size.height,
     }
 }
 

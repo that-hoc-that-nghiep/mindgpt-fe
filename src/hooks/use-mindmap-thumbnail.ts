@@ -7,8 +7,8 @@ interface ThumbnailOptions {
     backgroundColor?: string
 }
 
-const THUMBNAIL_WIDTH = 512
-const THUMBNAIL_HEIGHT = 384
+const THUMBNAIL_WIDTH = 640
+const THUMBNAIL_HEIGHT = 360
 
 const useMindmapThumbnail = ({
     width = THUMBNAIL_WIDTH,

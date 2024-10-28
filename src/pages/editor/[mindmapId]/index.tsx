@@ -150,12 +150,11 @@ const MindmapEditorPage = () => {
 
                 if (isNotLayouted) {
                     getLayoutedElements()
+                    setTimeout(() => {
+                        fitView({ duration: 800 })
+                    }, 500)
                 }
             }, 100)
-
-            setTimeout(() => {
-                fitView({ duration: 800 })
-            }, 500)
         }
     }, [mindmap, isLoading])
 
