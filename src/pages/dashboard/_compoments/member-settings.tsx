@@ -2,12 +2,19 @@ import { useOrg, useUser } from "@/api/hooks"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useDialog } from "@/hooks"
 import { OrgResponse } from "@/types"
 import { authInstance } from "@/utils/axios"
-import { User2, UserPlus, UserX } from "lucide-react"
+import { useQueryClient } from "@tanstack/react-query"
+import { Ellipsis, User2, UserPlus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
@@ -23,6 +30,7 @@ const MemberSettings = () => {
             email: "",
         },
     })
+    const queryClient = useQueryClient()
     useEffect(() => {
         if (userData && orgData) {
             const user = userData.organizations.find(
@@ -150,6 +158,55 @@ const MemberSettings = () => {
         })
     }
 
+    const handleTransferOwnership = async (newOwnerEmail: string) => {
+        const loading = toast.loading("Đang chuyển giao quyền...")
+        try {
+            await authInstance.put(`/org/${orgData.id}/transfer`, {
+                newOwnerEmail,
+            })
+            toast.success("Đã chuyển giao quyền")
+            queryClient.invalidateQueries({
+                queryKey: ["org", orgData.id],
+            })
+            queryClient.invalidateQueries({
+                queryKey: ["user", userData.id],
+            })
+            setIsOwner(false)
+        } catch (error) {
+            toast.error("Chuyển giao quyền thất bại")
+        } finally {
+            dialog.hideDialog()
+            toast.dismiss(loading)
+        }
+    }
+
+    const handleConfirmTransfer = (newOwnerEmail: string) => {
+        dialog.showDialog({
+            title: "Xác nhận chuyển giao quyền",
+            children: (
+                <div>
+                    <p className="text-sm">
+                        Bạn có chắc chắn muốn chuyển giao quyền sở hữu nhóm này
+                        không?
+                    </p>
+                </div>
+            ),
+            footer: (
+                <div className="flex justify-end space-x-4">
+                    <Button variant="outline" onClick={dialog.hideDialog}>
+                        Hủy
+                    </Button>
+                    <Button
+                        variant={"success"}
+                        onClick={() => handleTransferOwnership(newOwnerEmail)}
+                    >
+                        Chuyển giao
+                    </Button>
+                </div>
+            ),
+        })
+    }
+
     return (
         <Card className="w-full flex-grow">
             <CardHeader className="flex flex-row items-center justify-between">
@@ -192,15 +249,32 @@ const MemberSettings = () => {
                                 </div>
 
                                 {isOwner && !member.is_owner && (
-                                    <Button
-                                        variant="destructive"
-                                        size="sm"
-                                        onClick={() =>
-                                            handelConfirmRemove([member.email])
-                                        }
-                                    >
-                                        <UserX className="size-4" />
-                                    </Button>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger>
+                                            <Ellipsis className="size-6" />
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem
+                                                onClick={() => {
+                                                    handleConfirmTransfer(
+                                                        member.email
+                                                    )
+                                                }}
+                                            >
+                                                Chuyển quyền sở hữu
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                className="text-red-600"
+                                                onClick={() =>
+                                                    handelConfirmRemove([
+                                                        member.email,
+                                                    ])
+                                                }
+                                            >
+                                                Xóa thành viên
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 )}
                             </div>
                         ))
