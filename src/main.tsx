@@ -124,16 +124,16 @@ const routers = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
     // <StrictMode>
     <QueryClientProvider client={queryClient}>
-        <ReactFlowProvider>
-            <SheetProvider>
-                <DialogProvider>
-                    <TooltipProvider>
+        <TooltipProvider>
+            <DialogProvider>
+                <SheetProvider>
+                    <ReactFlowProvider>
                         <RouterProvider router={routers} />
                         <Toaster />
-                    </TooltipProvider>
-                </DialogProvider>
-            </SheetProvider>
-        </ReactFlowProvider>
+                    </ReactFlowProvider>
+                </SheetProvider>
+            </DialogProvider>
+        </TooltipProvider>
     </QueryClientProvider>
     // </StrictMode>
 )
