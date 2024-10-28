@@ -125,14 +125,14 @@ createRoot(document.getElementById("root")!).render(
     // <StrictMode>
     <QueryClientProvider client={queryClient}>
         <ReactFlowProvider>
-            <TooltipProvider>
+            <SheetProvider>
                 <DialogProvider>
-                    <SheetProvider>
+                    <TooltipProvider>
                         <RouterProvider router={routers} />
                         <Toaster />
-                    </SheetProvider>
+                    </TooltipProvider>
                 </DialogProvider>
-            </TooltipProvider>
+            </SheetProvider>
         </ReactFlowProvider>
     </QueryClientProvider>
     // </StrictMode>
