@@ -31,7 +31,7 @@ const menuItems: MenuItem[] = [
 
 export default function Sidebar() {
     const [selected, setSelected] = useState<MenuItem>(menuItems[0])
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(true)
     return (
         <div className="border-r flex flex-row">
             <div className=" flex flex-col p-2 space-y-5 border">
