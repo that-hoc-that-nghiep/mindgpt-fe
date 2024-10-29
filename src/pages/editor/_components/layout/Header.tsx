@@ -31,10 +31,6 @@ export default function Header() {
     }, [mindmapData])
 
     const handleSetTitle = () => {
-        setMindmap({
-            ...mindmapData,
-            title: text,
-        })
         setIsEditing(false)
     }
 
@@ -49,7 +45,7 @@ export default function Header() {
         const loading = toast.loading("Đang lưu sơ đồ...")
         try {
             await instance.patch(`/mindmap/${orgId}/${mindmapId}`, {
-                title: mindmapData.title,
+                title: text,
                 thumbnail: await getThumbnail(),
                 nodes: getNodes().map((node) => convertMindmapNodeToNode(node)),
                 edges: getEdges().map((edge) => convertMindmapEdgeToEdge(edge)),

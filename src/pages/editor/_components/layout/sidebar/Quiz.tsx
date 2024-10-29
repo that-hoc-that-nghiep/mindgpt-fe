@@ -114,12 +114,14 @@ export default function Quiz() {
                     quizQuestions.map((question, questionIndex) => (
                         <div
                             key={questionIndex}
-                            className="mb-6 border p-4 rounded-md"
+                            className="mb-6 border rounded-md p-2"
                         >
                             <h3 className="text-md font-semibold mb-2">
-                                Câu hỏi {questionIndex + 1}:
+                                Câu hỏi số {questionIndex + 1}
                             </h3>
-                            <p className="mb-2">{question.question}</p>
+                            <p className="mb-2 break-words">
+                                {question.question}
+                            </p>
                             <div className="grid grid-cols-2 gap-2 mb-2">
                                 {question.answers.map((answer, answerIndex) => (
                                     <Button
@@ -130,7 +132,7 @@ export default function Quiz() {
                                                 ? "default"
                                                 : "outline"
                                         }
-                                        className={`w-full h-full py-2 px-2 text-sm ${
+                                        className={`w-full h-full py-2 px-2 text-sm whitespace-normal break-words ${
                                             isSubmitted
                                                 ? answer.isCorrect
                                                     ? "bg-green-500 hover:bg-green-600"
@@ -155,7 +157,7 @@ export default function Quiz() {
                                 ))}
                             </div>
                             {isSubmitted && (
-                                <p className="text-sm mt-3">
+                                <p className="text-sm mt-3 break-words">
                                     {selectedAnswers[questionIndex] ===
                                     question.answers.find((a) => a.isCorrect)
                                         ?.answer
