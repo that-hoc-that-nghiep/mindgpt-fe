@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/tooltip"
 import { Check, NotebookPen, Pencil, Trash2, X } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { useParams } from "react-router-dom"
 
 export interface BaseNodeData {
     label?: string
@@ -58,10 +59,13 @@ const BaseNode = ({
     const [isSaved, setIsSaved] = useState(false)
 
     const sheet = useSheet()
+    const { orgId, mindmapId } = useParams()
     const handleTakeNote = () => {
         sheet.showSheet({
             title: `${label}`,
-            children: <NodeInfo id={nodeId} />,
+            children: (
+                <NodeInfo id={nodeId} mindmapId={mindmapId} orgId={orgId} />
+            ),
         })
     }
 
