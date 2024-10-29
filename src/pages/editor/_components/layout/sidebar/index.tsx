@@ -23,7 +23,7 @@ const menuItems: MenuItem[] = [
         icon: <PenSquare className="text-blue-500" />,
     },
     {
-        title: "Tạo câu hỏi",
+        title: "Tạo bài quiz",
         comp: <Quiz />,
         icon: <PuzzleIcon className="text-blue-500" />,
     },
