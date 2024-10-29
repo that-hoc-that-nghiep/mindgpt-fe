@@ -51,7 +51,7 @@ export const useMindmap = (orgId: string, mindmapId: string) => {
     if (!token) return { mindmap: null, isLoading: false }
     if (!mindmapId) return { mindmap: null, isLoading: false }
 
-    const { data, isLoading } = useQuery({
+    const { data, isLoading, refetch } = useQuery({
         queryKey: ["mindmap", orgId, mindmapId],
         queryFn: () => getMindmap(orgId, mindmapId),
     })
@@ -60,7 +60,7 @@ export const useMindmap = (orgId: string, mindmapId: string) => {
         queryClient.setQueryData(["mindmap", orgId, mindmapId], mindmap)
     }
 
-    return { data, isLoading, setMindmap }
+    return { data, isLoading, setMindmap, refetch }
 }
 export const useUpdateOrg = () => {
     return useMutation({

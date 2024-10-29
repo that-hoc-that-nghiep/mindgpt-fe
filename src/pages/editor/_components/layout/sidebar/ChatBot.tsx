@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import LoadingDots from "@/components/ui/loading-dots"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useSelectedNodes } from "@/stores/selected-nodes-store"
-import { MindmapMessage } from "@/types"
+import { MindmapMessage, MindmapResponse } from "@/types"
 import { instance } from "@/utils/axios"
 import { useListState } from "@mantine/hooks"
 import { Send } from "lucide-react"
@@ -13,6 +13,9 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import { parseMarkdownToHTML } from "@/utils"
+import { useQueryClient } from "@tanstack/react-query"
+import { useLayoutedElements } from "@/hooks"
+import { useReactFlow } from "reactflow"
 
 const Message = ({ role, content }: MindmapMessage) => {
     return (
@@ -50,13 +53,15 @@ const Message = ({ role, content }: MindmapMessage) => {
 
 export default function ChatBot() {
     const { orgId, mindmapId } = useParams()
-    const { data: mindmap } = useMindmap(orgId, mindmapId)
+    const { data: mindmap, setMindmap } = useMindmap(orgId, mindmapId)
     const [conversation, handler] = useListState<MindmapMessage>([])
     const [message, setMessage] = useState<string>("")
     const [showCmd, setShowCmd] = useState<boolean>(false)
     const [isBotThinking, setIsBotThinking] = useState<boolean>(false)
     const { nodes: selectedNodes } = useSelectedNodes()
-
+    const queryClient = useQueryClient()
+    const { getLayoutedElements } = useLayoutedElements()
+    const { fitView } = useReactFlow()
     useEffect(() => {
         if (mindmap) {
             handler.setState(mindmap.conversation)
@@ -82,19 +87,45 @@ export default function ChatBot() {
                 e.target.value.trim() !== ""
         )
     }
-
     const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (message.trim() === "") return
 
         setIsBotThinking(true)
-
-        if (message.startsWith("/chỉnh sửa")) {
-        } else {
-            try {
-                handler.append({ role: "user", content: message })
-                setMessage("")
-                scrollBottom()
+        handler.append({ role: "user", content: message })
+        setMessage("")
+        scrollBottom()
+        try {
+            if (message.startsWith("/chỉnh sửa")) {
+                const { data } = await instance.put<{
+                    status: number
+                    message: string
+                    data: {
+                        newMindmap: MindmapResponse
+                        message: string
+                    }
+                }>(`/mindmap/${orgId}/${mindmapId}/edit`, {
+                    prompt: message,
+                    selectedNodes: selectedNodes.map((node) => ({
+                        id: node.id,
+                        name: node.data.label,
+                    })),
+                })
+                if (data) {
+                    handler.append({
+                        role: "ai",
+                        content: data.data.message,
+                    })
+                    queryClient.invalidateQueries({
+                        queryKey: ["mindmap", orgId, mindmapId],
+                    })
+                    setMindmap(data.data.newMindmap)
+                    setTimeout(() => {
+                        getLayoutedElements()
+                        fitView({ duration: 800 })
+                    }, 200)
+                }
+            } else {
                 const { data } = await instance.post<{
                     status: number
                     message: string
@@ -119,12 +150,12 @@ export default function ChatBot() {
                         content: data.data,
                     })
                 }
-            } catch (error) {
-                toast.error("Có lỗi xảy ra")
-            } finally {
-                setIsBotThinking(false)
-                scrollBottom()
             }
+        } catch (error) {
+            toast.error("Có lỗi xảy ra")
+        } finally {
+            setIsBotThinking(false)
+            scrollBottom()
         }
     }
     return (
