@@ -2,21 +2,9 @@ import { Button } from "@/components/ui/button"
 import { Download, Network, Plus, Trash2, X } from "lucide-react"
 
 export default function ManualEdit() {
-    const actions = [
-        { icon: Plus, label: "Add node" },
-        { icon: Trash2, label: "Clear canvas" },
-        { icon: Network, label: "Auto layout" },
-        { icon: Network, label: "Auto layout layer" },
-        { icon: Download, label: "Download image" },
-    ]
+    const actions = []
     return (
         <>
-            <div className=" flex justify-between items-center">
-                <h2 className="text-base font-bold">Manual edit</h2>
-                <Button variant="ghost" size="icon">
-                    <X className="h-4 w-4" />
-                </Button>
-            </div>
             <div className="grid grid-cols-3 gap-2">
                 {actions.map((action, index) => (
                     <Button

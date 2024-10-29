@@ -112,3 +112,11 @@ export interface MindmapResponse {
     orgId: string
     conversation: MindmapMessage[]
 }
+
+export interface QuizResponse {
+    question: string
+    answers: {
+        answer: string
+        isCorrect: boolean
+    }[]
+}

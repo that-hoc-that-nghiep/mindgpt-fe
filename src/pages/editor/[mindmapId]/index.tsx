@@ -8,7 +8,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { User } from "lucide-react"
+import { Network, User } from "lucide-react"
 import useRoomStore from "@/stores/room-store"
 import { useLayoutedElements, useRemoveLogo } from "@/hooks"
 import { useMindmap, useUser } from "@/api/hooks"
@@ -149,9 +149,9 @@ const MindmapEditorPage = () => {
                 )
 
                 if (isNotLayouted) {
-                    getLayoutedElements()
+                    fitView({ duration: 500 })
                     setTimeout(() => {
-                        fitView({ duration: 800 })
+                        getLayoutedElements()
                     }, 500)
                 }
             }, 100)
@@ -249,6 +249,19 @@ const MindmapEditorPage = () => {
             {/* <Panel position="top-right">
                 <OnlineUsers others={others} currentUser={user} />
             </Panel> */}
+            <Panel position="bottom-right">
+                <button
+                    className="bg-primary rounded-full p-3 text-secondary"
+                    onClick={() => {
+                        fitView({ duration: 500 })
+                        setTimeout(() => {
+                            getLayoutedElements()
+                        }, 500)
+                    }}
+                >
+                    <Network className="size-5" />
+                </button>
+            </Panel>
         </ReactFlow>
     )
 }
