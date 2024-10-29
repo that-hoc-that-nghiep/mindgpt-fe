@@ -1,6 +1,3 @@
-import { CommonNodeData } from "@/nodes/common-node"
-import { useMemo, useState } from "react"
-import { useReactFlow } from "reactflow"
 import { Label } from "./ui/label"
 import { Input } from "./ui/input"
 import {
@@ -15,9 +12,18 @@ import { Slider } from "./ui/slider"
 import { Textarea } from "./ui/textarea"
 import { Button } from "./ui/button"
 import { useNode } from "@/hooks"
+import { instance } from "@/utils/axios"
+import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
+import { BlockNoteView } from "@blocknote/mantine"
+import { useCreateBlockNote } from "@blocknote/react"
+import { Block } from "@blocknote/core"
+import { ScrollArea } from "./ui/scroll-area"
 
 interface NodeInfoProps {
     id?: string
+    orgId: string
+    mindmapId: string
 }
 
 const sizeOptions = ["Nhỏ", "Vừa", "Lớn", "Rất lớn"]
@@ -36,9 +42,35 @@ const sizeMapReverse: Record<number, number> = {
     180: 4,
 }
 
-const NodeInfo = ({ id }: NodeInfoProps) => {
+const NodeInfo = ({ id, orgId, mindmapId }: NodeInfoProps) => {
     if (!id) return null
     const { node, setNode } = useNode(id)
+    const [isAISuggesting, setIsAISuggesting] = useState(false)
+    const [blocks, setBlocks] = useState<Block[]>([])
+    const editor = useCreateBlockNote()
+
+    useEffect(() => {
+        if (
+            node.data.note.trim() === "" ||
+            !node.data.note ||
+            node.data.note === "[]"
+        ) {
+            return
+        }
+        console.log(JSON.parse(node.data.note))
+
+        editor.replaceBlocks(editor.document, JSON.parse(node.data.note))
+    }, [])
+
+    useEffect(() => {
+        setNode({
+            ...node,
+            data: {
+                ...node.data,
+                note: JSON.stringify(blocks, null, 2),
+            },
+        })
+    }, [blocks])
 
     const handleSettingsChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -65,27 +97,35 @@ const NodeInfo = ({ id }: NodeInfoProps) => {
         })
     }
 
-    const handleAISuggestion = () => {
-        const suggestions = [
-            "Consider adding key points related to this topic.",
-            "Think about potential connections to other nodes.",
-            "Reflect on the importance of this idea in the overall context.",
-            "What are the implications or consequences of this concept?",
-        ]
-        const suggestion =
-            suggestions[Math.floor(Math.random() * suggestions.length)]
-        setNode({
-            ...node,
-            data: {
-                ...node.data,
-                note: suggestion,
-            },
-        })
+    const handleAISuggestion = async () => {
+        setIsAISuggesting(true)
+        const loading = toast.loading("Đang gợi ý...")
+        try {
+            const { data: suggestion } = await instance.post<{
+                status: number
+                message: string
+                data: string
+            }>(`/mindmap/${orgId}/${mindmapId}/suggest-note`, {
+                selectedNode: {
+                    id: node.id,
+                    name: node.data.label,
+                },
+            })
+            const blocksResponse = await editor.tryParseMarkdownToBlocks(
+                suggestion.data
+            )
+            editor.replaceBlocks(editor.document, blocksResponse)
+        } catch (error) {
+            toast.error("Có lỗi xảy ra, vui lòng thử lại")
+        } finally {
+            setIsAISuggesting(false)
+            toast.dismiss(loading)
+        }
     }
 
     return (
         <>
-            <div className="grid gap-6 py-6">
+            <div className="flex flex-col gap-6 pb-12 pt-6 h-full">
                 <div className="space-y-2">
                     <Label
                         htmlFor="label"
@@ -187,7 +227,7 @@ const NodeInfo = ({ id }: NodeInfoProps) => {
                         </div>
                     </div>
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2 grow">
                     <div className="flex justify-between items-center">
                         <Label
                             htmlFor="note"
@@ -205,13 +245,24 @@ const NodeInfo = ({ id }: NodeInfoProps) => {
                             Gợi ý từ AI
                         </Button>
                     </div>
-                    <Textarea
+                    <ScrollArea className="h-96 border rounded-md grow">
+                        <BlockNoteView
+                            editor={editor}
+                            onChange={() => {
+                                // Saves the document JSON to state.
+                                setBlocks(editor.document)
+                            }}
+                            theme={"light"}
+                        />
+                    </ScrollArea>
+                    {/* <Textarea
                         id="note"
                         name="note"
                         value={node.data.note}
                         onChange={handleSettingsChange}
                         className="min-h-[400px]"
-                    />
+                        disabled={isAISuggesting}
+                    /> */}
                 </div>
             </div>
         </>
