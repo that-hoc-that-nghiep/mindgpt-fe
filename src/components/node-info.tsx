@@ -240,12 +240,13 @@ const NodeInfo = ({ id, orgId, mindmapId }: NodeInfoProps) => {
                             className="bg-gradient-to-br from-purple-500 to-pink-500 shadow-md font-bold uppercase group"
                             size="sm"
                             onClick={handleAISuggestion}
+                            disabled={isAISuggesting}
                         >
                             <Sparkles className="size-4 mr-2" />
                             Gợi ý từ AI
                         </Button>
                     </div>
-                    <ScrollArea className="h-96 border rounded-md grow">
+                    <ScrollArea className="border rounded-md grow">
                         <BlockNoteView
                             editor={editor}
                             onChange={() => {

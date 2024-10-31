@@ -111,6 +111,7 @@ export interface MindmapResponse {
     edges: EdgeResponse[]
     orgId: string
     conversation: MindmapMessage[]
+    note: string
 }
 
 export interface QuizResponse {

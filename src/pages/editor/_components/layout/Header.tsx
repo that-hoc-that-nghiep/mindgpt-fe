@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useDialog, useMindmapThumbnail } from "@/hooks"
 import { CommonNodeData } from "@/nodes/common-node"
+import { useMindmapNote } from "@/stores"
 import { convertMindmapEdgeToEdge, convertMindmapNodeToNode } from "@/utils"
 // import { useCurrentMindmap } from "@/stores"
 import { instance } from "@/utils/axios"
@@ -24,6 +25,7 @@ export default function Header() {
     const navigate = useNavigate()
     const getThumbnail = useMindmapThumbnail()
     const { getNodes, getEdges } = useReactFlow<CommonNodeData>()
+    const { note } = useMindmapNote()
     useEffect(() => {
         if (mindmapData) {
             setText(mindmapData.title)
@@ -49,6 +51,7 @@ export default function Header() {
                 thumbnail: await getThumbnail(),
                 nodes: getNodes().map((node) => convertMindmapNodeToNode(node)),
                 edges: getEdges().map((edge) => convertMindmapEdgeToEdge(edge)),
+                note: JSON.stringify(note, null, 2),
             })
             toast.success("Đã lưu")
             navigate(`/dashboard/${orgId}`)
