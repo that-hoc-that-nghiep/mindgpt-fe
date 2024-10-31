@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Dispatch, ReactElement, SetStateAction, useState } from "react"
 import ChatBot from "./ChatBot"
 import Quiz from "./Quiz"
-import ManualEdit from "./ManualEdit"
+import TakeNote from "./TakeNote"
 
 interface MenuItem {
     title: string
@@ -18,8 +18,8 @@ const menuItems: MenuItem[] = [
         icon: <MessageCircleMore className="text-blue-500" />,
     },
     {
-        title: "Chỉnh sửa thủ công",
-        comp: <ManualEdit />,
+        title: "Ghi chú",
+        comp: <TakeNote />,
         icon: <PenSquare className="text-blue-500" />,
     },
     {
@@ -65,7 +65,7 @@ export default function Sidebar() {
                             <X className="h-4 w-4" />
                         </Button>
                     </div>
-                    <div className="flex-grow overflow-auto">
+                    <div className="flex flex-grow overflow-auto">
                         {selected.comp}
                     </div>
                 </div>
