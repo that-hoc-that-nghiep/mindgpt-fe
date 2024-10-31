@@ -232,6 +232,7 @@ const MindmapEditorPage = () => {
                 type: "floating",
                 markerEnd: { type: MarkerType.ArrowClosed },
             }}
+            minZoom={0.1}
             // onPointerMove={handleRealtimeChange}
             ref={mouseRef}
         >
