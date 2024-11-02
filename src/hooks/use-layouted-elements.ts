@@ -16,15 +16,11 @@ const useLayoutedElements = () => {
 
     const getLayoutedElements = useCallback((options?: LayoutOptions) => {
         const layoutOptions = { ...defaultOptions, ...options }
-        const graph: ElkNode = {
+        const graph: any = {
             id: "root",
             layoutOptions: layoutOptions,
             children: getNodes(),
-            edges: getEdges().map((edge) => ({
-                ...edge,
-                sources: [edge.source],
-                targets: [edge.target],
-            })),
+            edges: getEdges(),
             x: 0,
             y: 0,
         }

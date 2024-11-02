@@ -322,10 +322,7 @@ const MindmapEditorPage = () => {
                 <button
                     className="bg-primary rounded-full p-3 text-secondary"
                     onClick={() => {
-                        fitView({ duration: 500 })
-                        setTimeout(() => {
-                            getLayoutedElements()
-                        }, 500)
+                        getLayoutedElements()
                     }}
                 >
                     <Network className="size-5" />
