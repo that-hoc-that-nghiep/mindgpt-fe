@@ -1,4 +1,4 @@
-import ELK, { LayoutOptions } from "elkjs/lib/elk.bundled"
+import ELK, { ElkNode, LayoutOptions } from "elkjs/lib/elk.bundled"
 import { useCallback } from "react"
 import { Node, useReactFlow } from "reactflow"
 
@@ -16,14 +16,20 @@ const useLayoutedElements = () => {
 
     const getLayoutedElements = useCallback((options?: LayoutOptions) => {
         const layoutOptions = { ...defaultOptions, ...options }
-        const graph = {
+        const graph: ElkNode = {
             id: "root",
             layoutOptions: layoutOptions,
             children: getNodes(),
-            edges: getEdges(),
+            edges: getEdges().map((edge) => ({
+                ...edge,
+                sources: [edge.source],
+                targets: [edge.target],
+            })),
+            x: 0,
+            y: 0,
         }
 
-        elk.layout(graph as any).then(({ children }) => {
+        elk.layout(graph).then(({ children }) => {
             children = children.map((node: any) => {
                 if (!node) return
                 return {
@@ -36,9 +42,11 @@ const useLayoutedElements = () => {
             })
 
             setNodes(children as Node<any>[])
-            window.requestAnimationFrame(() => {
-                fitView()
-            })
+            setTimeout(() => {
+                window.requestAnimationFrame(() => {
+                    fitView({ duration: 500 })
+                })
+            }, 200)
         })
     }, [])
 

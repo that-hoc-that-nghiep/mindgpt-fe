@@ -157,16 +157,13 @@ const MindmapEditorPage = () => {
             )
 
             setTimeout(() => {
-                // check if all node has x and y position is 0 then get layouted elements
                 const isNotLayouted = mindmap?.nodes.every(
                     (node) => node.pos.x === 0 && node.pos.y === 0
                 )
+                console.log("isNotLayouted", isNotLayouted)
 
                 if (isNotLayouted) {
-                    fitView({ duration: 500 })
-                    setTimeout(() => {
-                        getLayoutedElements()
-                    }, 500)
+                    getLayoutedElements()
                 }
             }, 100)
         }

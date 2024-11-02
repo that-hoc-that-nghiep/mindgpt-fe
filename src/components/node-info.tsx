@@ -243,7 +243,7 @@ const NodeInfo = ({ id, orgId, mindmapId }: NodeInfoProps) => {
                         Gợi ý từ AI
                     </Button>
                 </div>
-                <ScrollArea className="border rounded-md grow max-h-full overflow-y-auto">
+                <ScrollArea className="border rounded-md grow max-h-full">
                     <BlockNoteView
                         editor={editor}
                         onChange={() => {

@@ -52,7 +52,7 @@ export default function Sidebar() {
                 ))}
             </div>
             {open && (
-                <div className="flex flex-col w-[25rem] p-3 space-y-2 h-full">
+                <div className="flex flex-col p-3 space-y-2 w-[25rem]">
                     <div className="flex justify-between items-center">
                         <h2 className="text-base font-bold">
                             {selected.title}
@@ -65,7 +65,7 @@ export default function Sidebar() {
                             <X className="h-4 w-4" />
                         </Button>
                     </div>
-                    <div className="flex flex-grow overflow-auto">
+                    <div className="grow overflow-auto w-full">
                         {selected.comp}
                     </div>
                 </div>

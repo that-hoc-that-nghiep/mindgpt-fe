@@ -122,7 +122,6 @@ export default function ChatBot() {
                     setMindmap(data.data.newMindmap)
                     setTimeout(() => {
                         getLayoutedElements()
-                        fitView({ duration: 800 })
                     }, 200)
                 }
             } else {

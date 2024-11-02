@@ -59,8 +59,8 @@ export default function TakeNote() {
         }
     }
     return (
-        <div className="flex flex-col grow">
-            <div className="flex">
+        <div className="flex flex-col grow h-full">
+            <div className="flex w-full">
                 <Button
                     className="bg-gradient-to-br from-purple-500 to-pink-500 shadow-md font-bold uppercase group mb-2"
                     size="sm"
