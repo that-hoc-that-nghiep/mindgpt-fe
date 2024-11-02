@@ -13,10 +13,18 @@ import {
     Node,
     NodeChange,
     OnConnect,
+    OnConnectStartParams,
     OnEdgesChange,
     OnNodesChange,
+    useReactFlow,
+    XYPosition,
 } from "reactflow"
 import { create } from "zustand"
+import type {
+    MouseEvent as ReactMouseEvent,
+    TouchEvent as ReactTouchEvent,
+} from "react"
+import { convertNodeToMindmapNode } from "@/utils"
 
 declare global {
     interface Liveblocks {
@@ -42,7 +50,15 @@ type FlowState = {
     onNodesChange: OnNodesChange
     onEdgesChange: OnEdgesChange
     onConnect: OnConnect
-    // onMove: OnMove
+    onConnectStart: (
+        event: ReactMouseEvent | ReactTouchEvent,
+        params: OnConnectStartParams
+    ) => void
+    onConnectEnd: (
+        event: any,
+        screenToFlowPosition: (position: XYPosition) => XYPosition
+    ) => void
+    connectingNodeId: React.MutableRefObject<string | null>
 
     user: SharedUser
     setUser: (user: SharedUser) => void
@@ -61,54 +77,92 @@ const client = createClient({
 
 const useRoomStore = create<WithLiveblocks<FlowState>>()(
     liveblocks(
-        (set, get) => ({
-            // Initial values for nodes and edges
-            nodes: [],
-            edges: [],
+        (set, get) => {
+            const connectingNodeId = { current: null as string | null }
 
-            // Setters for nodes and edges
-            setNodes: (nodes: Node[]) => set({ nodes }),
-            setEdges: (edges: Edge[]) => set({ edges }),
+            const getId = () =>
+                `node_${Math.random().toString(36).substring(2, 9)}`
+            return {
+                // Initial values for nodes and edges
+                nodes: [],
+                edges: [],
 
-            // Apply changes to React Flow when the flowchart is interacted with
-            onNodesChange: (changes: NodeChange[]) => {
-                set({
-                    nodes: applyNodeChanges(changes, get().nodes),
-                })
-            },
-            onEdgesChange: (changes: EdgeChange[]) => {
-                set({
-                    edges: applyEdgeChanges(changes, get().edges),
-                })
-            },
-            onConnect: (connection: Connection) => {
-                set({
-                    edges: addEdge(connection, get().edges),
-                })
-            },
+                // Setters for nodes and edges
+                setNodes: (nodes: Node[]) => set({ nodes }),
+                setEdges: (edges: Edge[]) => set({ edges }),
 
-            user: {
-                id: 0,
-                cursor: { x: 0, y: 0 },
-                name: "",
-                picture: "",
-            },
+                // Apply changes to React Flow when the flowchart is interacted with
+                onNodesChange: (changes: NodeChange[]) => {
+                    set({
+                        nodes: applyNodeChanges(changes, get().nodes),
+                    })
+                },
+                onEdgesChange: (changes: EdgeChange[]) => {
+                    set({
+                        edges: applyEdgeChanges(changes, get().edges),
+                    })
+                },
+                onConnect: (connection: Connection) => {
+                    connectingNodeId.current = null
+                    set({
+                        edges: addEdge(connection, get().edges),
+                    })
+                },
+                onConnectStart: (_, { nodeId }: OnConnectStartParams) => {
+                    connectingNodeId.current = nodeId
+                },
 
-            // onMove: (e: MouseEvent | TouchEvent, viewport: Viewport) => {
-            //     set({
-            //         user: {
-            //             ...get().user,
-            //             cursor: {
-            //                 x: get().user.cursor.x + viewport.x,
-            //                 y: get().user.cursor.y + viewport.y,
-            //             },
-            //         },
-            //     })
-            // },
+                user: {
+                    id: 0,
+                    cursor: { x: 0, y: 0 },
+                    name: "",
+                    picture: "",
+                },
+                onConnectEnd: (
+                    event: any,
+                    screenToFlowPosition: (position: XYPosition) => XYPosition
+                ) => {
+                    if (!connectingNodeId.current) return
 
-            // Set the user
-            setUser: (user: SharedUser) => set({ user }),
-        }),
+                    const targetIsPane =
+                        event.target.classList.contains("react-flow__pane")
+
+                    if (targetIsPane) {
+                        // we need to remove the wrapper bounds, in order to get the correct position
+                        const id = getId()
+                        const pos = screenToFlowPosition({
+                            x: event.clientX,
+                            y: event.clientY,
+                        })
+                        const newNode = convertNodeToMindmapNode({
+                            id,
+                            label: "New Node",
+                            note: "",
+                            level: 3,
+                            bg_color: "#fff",
+                            text_color: "#000",
+                            pos,
+                            size: {
+                                width: 0,
+                                height: 0,
+                            },
+                        })
+
+                        set((state) => ({
+                            nodes: state.nodes.concat(newNode),
+                            edges: state.edges.concat({
+                                id,
+                                source: connectingNodeId.current,
+                                target: id,
+                            }),
+                        }))
+                    }
+                },
+                connectingNodeId,
+                // Set the user
+                setUser: (user: SharedUser) => set({ user }),
+            }
+        },
         {
             // Add Liveblocks client
             client,

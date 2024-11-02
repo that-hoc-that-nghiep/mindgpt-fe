@@ -54,7 +54,6 @@ export default function Header() {
                 note: JSON.stringify(note, null, 2),
             })
             toast.success("Đã lưu")
-            navigate(`/dashboard/${orgId}`)
         } catch (error) {
             toast.error("Có lỗi xảy ra, vui lòng thử lại")
         } finally {
@@ -83,7 +82,13 @@ export default function Header() {
                     >
                         Không lưu & Thoát
                     </Button>
-                    <Button onClick={handleSave} variant="success">
+                    <Button
+                        onClick={() => {
+                            handleSave()
+                            navigate(`/dashboard/${orgId}`)
+                        }}
+                        variant="success"
+                    >
                         Lưu & Thoát
                     </Button>
                 </div>
@@ -94,7 +99,10 @@ export default function Header() {
     return (
         <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2">
             <div className="flex items-center space-x-2">
-                <Link to={"/dashboard/abc"} className="flex gap-2 font-bold">
+                <Link
+                    to={`/dashboard/${orgId}`}
+                    className="flex gap-2 font-bold"
+                >
                     <BrainCircuit className="size-6 text-primary" />
                     MindGPT
                 </Link>
@@ -134,10 +142,17 @@ export default function Header() {
             <div className="flex items-center gap-2">
                 <Button
                     disabled={saving}
-                    variant="default"
+                    variant="outline"
                     onClick={handleExit}
                 >
                     Thoát
+                </Button>
+                <Button
+                    disabled={saving}
+                    variant="success"
+                    onClick={handleSave}
+                >
+                    Lưu
                 </Button>
             </div>
         </header>

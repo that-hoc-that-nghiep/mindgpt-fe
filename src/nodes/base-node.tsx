@@ -42,6 +42,16 @@ const nodeTextStyle: Record<number, string> = {
     3: "text-base",
 }
 
+const toolbarOffset: Record<number, number> = {
+    0: 30,
+    1: 25,
+    2: 20,
+    3: 20,
+    4: 20,
+    5: 20,
+    6: 20,
+}
+
 const BaseNode = ({
     label,
     selected,
@@ -52,7 +62,7 @@ const BaseNode = ({
     level,
     style,
 }: BaseNodeProps) => {
-    const { getNode, setNodes, getNodes } = useReactFlow()
+    const { getNode, setNodes, getNodes, fitView } = useReactFlow()
     const nodeId = useNodeId()
 
     const [labelEdit, setLabelEdit] = useState("")
@@ -61,6 +71,7 @@ const BaseNode = ({
     const sheet = useSheet()
     const { orgId, mindmapId } = useParams()
     const handleTakeNote = () => {
+        fitView({ nodes: [{ id: nodeId }], duration: 500, padding: 3 })
         sheet.showSheet({
             title: `${label}`,
             children: (
@@ -95,7 +106,11 @@ const BaseNode = ({
 
     return (
         <>
-            <NodeToolbar position={Position.Right} offset={20} align="center">
+            <NodeToolbar
+                position={Position.Right}
+                offset={toolbarOffset[level]}
+                align="center"
+            >
                 <div className="flex flex-col gap-2">
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -155,8 +170,20 @@ const BaseNode = ({
                         )}
                     </div>
                 </div>
-                <Handle type="source" position={Position.Right} />
-                <Handle type="target" position={Position.Left} />
+                <Handle
+                    type="target"
+                    position={Position.Top}
+                    style={{
+                        opacity: selected ? 1 : 0,
+                    }}
+                />
+                <Handle
+                    type="source"
+                    position={Position.Bottom}
+                    style={{
+                        opacity: selected ? 1 : 0,
+                    }}
+                />
             </div>
         </>
     )
