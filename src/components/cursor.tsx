@@ -1,21 +1,24 @@
+interface XYPostion {
+    x: number
+    y: number
+}
+
 export default function Cursor({
     color,
-    x,
-    y,
+    pos,
     name,
 }: {
     color: string
-    x: number
-    y: number
+    pos: XYPostion
     name: string
 }) {
     return (
         <div
             style={{
-                position: "absolute",
+                position: "fixed",
                 top: "0",
                 left: "0",
-                transform: `translate(${x}px, ${y}px)`,
+                transform: `translate(${pos.x}px, ${pos.y}px)`,
                 transition: "transform 120ms linear",
                 zIndex: 999,
             }}
