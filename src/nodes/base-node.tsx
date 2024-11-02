@@ -155,8 +155,20 @@ const BaseNode = ({
                         )}
                     </div>
                 </div>
-                <Handle type="source" position={Position.Right} />
-                <Handle type="target" position={Position.Left} />
+                <Handle
+                    type="target"
+                    position={Position.Top}
+                    style={{
+                        opacity: selected ? 1 : 0,
+                    }}
+                />
+                <Handle
+                    type="source"
+                    position={Position.Bottom}
+                    style={{
+                        opacity: selected ? 1 : 0,
+                    }}
+                />
             </div>
         </>
     )

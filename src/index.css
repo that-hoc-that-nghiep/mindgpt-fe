@@ -88,6 +88,32 @@
     @apply text-2xl font-bold mb-6;
 }
 
-.react-flow__handle {
+.react-flow .react-flow__handle {
+    border-radius: 3px;
+    background-color: #784be8;
     opacity: 0;
+}
+
+.react-flow .react-flow__handle-top {
+    width: 30px;
+    height: 14px;
+    top: -10px;
+}
+
+.react-flow .react-flow__handle-bottom {
+    width: 30px;
+    height: 14px;
+    bottom: -10px;
+}
+
+.react-flow .react-flow__handle-left {
+    width: 14px;
+    height: 30px;
+    left: -10px;
+}
+
+.react-flow .react-flow__handle-right {
+    width: 14px;
+    height: 30px;
+    right: -10px;
 }

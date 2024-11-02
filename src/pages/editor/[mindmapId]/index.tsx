@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect } from "react"
+import React, { Fragment, useCallback, useEffect, useRef } from "react"
 import { BaseUserMeta, JsonObject, User as UserData } from "@liveblocks/client"
 import { useParams } from "react-router-dom"
 import { UserResponse } from "@/types"
@@ -13,9 +13,12 @@ import useRoomStore from "@/stores/room-store"
 import { useLayoutedElements, useRemoveLogo } from "@/hooks"
 import { useMindmap, useUser } from "@/api/hooks"
 import ReactFlow, {
+    addEdge,
     Background,
+    Connection,
     Controls,
     MarkerType,
+    OnConnectStartParams,
     Panel,
     SelectionMode,
     useEdgesState,
@@ -29,6 +32,12 @@ import { edgeTypes } from "@/edges"
 import Cursor from "@/components/cursor"
 import { CommonNodeData } from "@/nodes/common-node"
 import { convertEdgeToMindmapEdge, convertNodeToMindmapNode } from "@/utils"
+import type {
+    MouseEvent as ReactMouseEvent,
+    TouchEvent as ReactTouchEvent,
+    ComponentType,
+    MemoExoticComponent,
+} from "react"
 
 const cusorColors = [
     "#991b1b",
@@ -45,6 +54,9 @@ const cusorColors = [
 const MAX_USERS_DISPLAY = 5
 
 const panOnDrag = [1, 2]
+
+let id = 1
+const getId = () => `temp_${id++}`
 
 const OnlineUsers = ({
     others,
@@ -109,9 +121,11 @@ const OnlineUsers = ({
 const MindmapEditorPage = () => {
     useRemoveLogo()
     const { data: user } = useUser()
-    const { fitView } = useReactFlow()
+    const { fitView, screenToFlowPosition } = useReactFlow()
     const [nodes, setNodes, onNodesChange] = useNodesState<CommonNodeData>([])
     const [edges, setEdges, onEdgesChange] = useEdgesState([])
+    const reactFlowWrapper = useRef(null)
+    const connectingNodeId = useRef(null)
     const { orgId, mindmapId } = useParams()
     const {
         data: mindmap,
@@ -212,6 +226,61 @@ const MindmapEditorPage = () => {
     //     )
     // }
 
+    const onConnect = useCallback((params: Connection) => {
+        // reset the start node on connections
+        connectingNodeId.current = null
+        setEdges((eds) => addEdge(params, eds))
+    }, [])
+    const onConnectStart = useCallback(
+        (
+            _: ReactMouseEvent | ReactTouchEvent,
+            { nodeId }: OnConnectStartParams
+        ) => {
+            connectingNodeId.current = nodeId
+        },
+        []
+    )
+
+    const onConnectEnd = useCallback(
+        (event: any) => {
+            if (!connectingNodeId.current) return
+
+            const targetIsPane =
+                event.target.classList.contains("react-flow__pane")
+
+            if (targetIsPane) {
+                // we need to remove the wrapper bounds, in order to get the correct position
+                const id = getId()
+                const pos = screenToFlowPosition({
+                    x: event.clientX,
+                    y: event.clientY,
+                })
+                const newNode = convertNodeToMindmapNode({
+                    id,
+                    label: "New Node",
+                    note: "",
+                    level: 3,
+                    bg_color: "#fff",
+                    text_color: "#000",
+                    pos,
+                    size: {
+                        width: 0,
+                        height: 0,
+                    },
+                })
+
+                setNodes((nds) => nds.concat(newNode))
+                setEdges((eds) =>
+                    eds.concat({
+                        id,
+                        source: connectingNodeId.current,
+                        target: id,
+                    })
+                )
+            }
+        },
+        [screenToFlowPosition]
+    )
     return (
         <ReactFlow
             nodes={nodes}
@@ -220,7 +289,9 @@ const MindmapEditorPage = () => {
             edgeTypes={edgeTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            // onConnect={onConnect}
+            onConnect={onConnect}
+            onConnectStart={onConnectStart}
+            onConnectEnd={onConnectEnd}
             onSelectionChange={onSelectionChange}
             panOnScroll
             selectionOnDrag
