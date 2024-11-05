@@ -4,10 +4,14 @@ import { Input } from "@/components/ui/input"
 import { useDialog, useMindmapThumbnail } from "@/hooks"
 import { CommonNodeData } from "@/nodes/common-node"
 import { useMindmapNote } from "@/stores"
-import { convertMindmapEdgeToEdge, convertMindmapNodeToNode } from "@/utils"
+import {
+    convertMindmapEdgeToEdge,
+    convertMindmapNodeToNode,
+    downloadImage,
+} from "@/utils"
 // import { useCurrentMindmap } from "@/stores"
 import { instance } from "@/utils/axios"
-import { BrainCircuit, Check, PenSquare } from "lucide-react"
+import { BrainCircuit, Check, Download, PenSquare } from "lucide-react"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import toast, { useToasterStore } from "react-hot-toast"
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -143,6 +147,20 @@ export default function Header() {
                 <Button
                     disabled={saving}
                     variant="outline"
+                    onClick={async () => {
+                        const image = await getThumbnail({
+                            tWidth: 1920,
+                            tHeight: 1080,
+                        })
+                        downloadImage(image, text)
+                    }}
+                >
+                    <Download className="mr-2 size-4" />
+                    Xuất dưới dạng ảnh
+                </Button>
+                <Button
+                    disabled={saving}
+                    variant="destructive"
                     onClick={handleExit}
                 >
                     Thoát

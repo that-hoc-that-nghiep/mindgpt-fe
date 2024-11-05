@@ -9,20 +9,25 @@ interface ThumbnailOptions {
 
 const THUMBNAIL_WIDTH = 640
 const THUMBNAIL_HEIGHT = 360
+const THUMBNAIL_BACKGROUND_COLOR = "#f5f5f5"
 
 const useMindmapThumbnail = ({
     width = THUMBNAIL_WIDTH,
     height = THUMBNAIL_HEIGHT,
-    backgroundColor = "#f5f5f5",
+    backgroundColor = THUMBNAIL_BACKGROUND_COLOR,
 }: ThumbnailOptions = {}) => {
     const { getNodes } = useReactFlow()
 
-    const getThumbnail = () => {
+    const getThumbnail = ({
+        tWidth = width,
+        tHeight = height,
+        tBackgroundColor = backgroundColor,
+    } = {}) => {
         const nodesBounds = getNodesBounds(getNodes())
         const { x, y, zoom } = getViewportForBounds(
             nodesBounds,
-            width,
-            height,
+            tWidth,
+            tHeight,
             0.5,
             2
         )
@@ -30,12 +35,12 @@ const useMindmapThumbnail = ({
         return toPng(
             document.querySelector(".react-flow__viewport") as HTMLElement,
             {
-                backgroundColor,
-                width: width,
-                height: height,
+                backgroundColor: tBackgroundColor,
+                width: tWidth,
+                height: tHeight,
                 style: {
-                    width: `${width}px`,
-                    height: `${height}px`,
+                    width: `${tWidth}px`,
+                    height: `${tHeight}px`,
                     transform: `translate(${x}px, ${y}px) scale(${zoom})`,
                 },
             }
