@@ -123,7 +123,7 @@ const Step2 = () => {
                                 <Earth className="size-4 mr-2" />
                                 Trang web
                             </TabsTrigger>
-                            <TabsTrigger value="youtube">
+                            <TabsTrigger value="youtube" disabled>
                                 <Youtube className="size-4 mr-2" />
                                 Youtube
                             </TabsTrigger>
@@ -134,6 +134,7 @@ const Step2 = () => {
                                 type="file"
                                 className="h-14"
                                 onChange={handleFileSelected}
+                                accept=".pdf"
                             />
                         </TabsContent>
                         <TabsContent value="web">
