@@ -39,8 +39,8 @@ export default function Quiz() {
     const [score, setScore] = useState(0)
     const handleGenQuiz = async () => {
         // checkl input is number, value from 1-10 and not empty
-        if (isNaN(quizNumber) || quizNumber < 1 || quizNumber > 10) {
-            toast.error("Số lượng câu hỏi phải là số từ 1 đến 10")
+        if (isNaN(quizNumber) || quizNumber < 1 || quizNumber > 100) {
+            toast.error("Số lượng câu hỏi phải là số từ 1 đến 100")
             return
         }
         setLoading(true)
