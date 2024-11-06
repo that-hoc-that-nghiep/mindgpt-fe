@@ -11,11 +11,23 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { useDialog } from "@/hooks"
 import { OrgResponse } from "@/types"
 import { authInstance } from "@/utils/axios"
 import { useQueryClient } from "@tanstack/react-query"
-import { Ellipsis, User2, UserPlus } from "lucide-react"
+import {
+    ArrowLeftRight,
+    Ellipsis,
+    User2,
+    UserCheck,
+    UserPlus,
+    UserX,
+} from "lucide-react"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
@@ -26,6 +38,7 @@ const MemberSettings = () => {
     const { data: orgData, isLoading: isOrgLoading, setOrg } = useOrg()
     const { data: userData, isLoading: isUserLoading } = useUser()
     const [isOwner, setIsOwner] = useState<boolean | null>(null)
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
     const addForm = useForm({
         defaultValues: {
             email: "",
@@ -264,32 +277,43 @@ const MemberSettings = () => {
                                 </div>
 
                                 {isOwner && !member.is_owner && (
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger>
-                                            <Ellipsis className="size-6" />
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem
-                                                onClick={() => {
-                                                    handleConfirmTransfer(
-                                                        member.email
-                                                    )
-                                                }}
-                                            >
-                                                Chuyển quyền sở hữu
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem
-                                                className="text-red-600"
-                                                onClick={() =>
-                                                    handelConfirmRemove([
-                                                        member.email,
-                                                    ])
-                                                }
-                                            >
+                                    <div className="flex gap-2">
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <Button
+                                                    variant="outline"
+                                                    onClick={() => {
+                                                        handleConfirmTransfer(
+                                                            member.email
+                                                        )
+                                                    }}
+                                                >
+                                                    <UserCheck className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                Chuyển giao quyền sở hữu
+                                            </TooltipContent>
+                                        </Tooltip>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                <Button
+                                                    variant="outline"
+                                                    className="text-red-600"
+                                                    onClick={() =>
+                                                        handelConfirmRemove([
+                                                            member.email,
+                                                        ])
+                                                    }
+                                                >
+                                                    <UserX className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
                                                 Xóa thành viên
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
                                 )}
                             </div>
                         ))
